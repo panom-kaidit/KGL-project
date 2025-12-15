@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>signup</title>
+</head>
+<body>
+    <form action="">
+        
+        <!-- the section is going to be about User Details -->
+        <section style="display: flex;">
+            <div>
+                <label for="surname">Surname</label>
+                <input type="text" id="surname" required>
+            </div>
+            <br>
+            <div>
+            <label for="firstname">Frist Name</label>
+                <input type="text" id="firstname" required>
+            </div>
+            <br>
+            <div>
+                <label for="midlename">midle Name</label>
+                <input type="text" id="midlename" required>
+            </div>
+            <br>
+            <div>
+                <label for="lastname">Last Name</label>
+                <input type="text" id="lastname">
+            </div>
+        </section>
+        <br>
+        <div>
+            <label for="date">Date of birth </label>
+            <input type="date" required>
+        </div>
+        <br>
+        <!-- contact information -->
+        <section style="display: flex;">
+            <div>
+                <label for="email">Email Address</label>
+                <input type="email" required>
+            </div>
+            <div>
+                <label for="contact">Phone Number</label>
+                <input type="number" minlength="10" maxlength="14">
+            </div>
+        </section>
+        <div>
+            <button>Sign up</button>
+        </div>
+        <!-- the following section is about the branch and comapany -->
+        <section>
+            <div>
+                <label for="">The campany that is using the platform</label>
+            </div>
+        </section>
+    </form>
+</body>
+</html>
