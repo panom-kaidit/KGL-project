@@ -1,43 +1,114 @@
+/* Reset */
 * {
-    margin: auto;
-
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
-/* applies to the whole body */
+/* Page center */
 body {
-    border: 8px solid black;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    align-content: center;
+    background: #f5f5f5;
 }
 
-/* the form box */
+/* Main container */
+.login-container {
+    width: 350px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.form-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.form-header img {
+    width: 60px;
+    margin-bottom: 10px;
+}
+
+.form-header h1 {
+    color: #1B5E20;
+}
+
+.form-header h2 {
+    font-size: 16px;
+    color: #555;
+}
+
+.form-header p {
+    font-size: 14px;
+    color: #777;
+}
+
+/* Form */
 .form-box {
-    flex-wrap: wrap;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-}
-/* inputs field editing */
-.input {
-    width: 150%;
-    height: 100%;
-    flex-wrap: wrap;
+    gap: 15px;
 }
 
-/* remember Me editing */
+.form-group label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #1B5E20;
+}
+
+/* Remember section */
 .remember {
     display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
 }
 
+.remember a {
+    text-decoration: none;
+    color: #1B5E20;
+}
 
+/* Button */
+.submit-btn button {
+    width: 100%;
+    padding: 10px;
+    background: #1B5E20;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
 
-/* summit button */
-.submit-btn { 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.submit-btn button:hover {
+    background: #144d18;
+}
+
+/* Signup */
+.signup-link {
+    text-align: center;
+    font-size: 13px;
+}
+
+.signup-link a {
+    color: #1B5E20;
+    text-decoration: none;
 }

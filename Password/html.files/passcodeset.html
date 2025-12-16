@@ -3,13 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>setting password</title>
+    <title>Reset Password</title>
+    <link rel="stylesheet" href="/Password/css.files/passcodeset.css">
 </head>
 <body>
-    <form action="">
-        <label for="email">Email</label>
-        <input type="email" required>
-        <button type="submit"><a href="/Password/html.files/passwordreset.html">next</a></button>
-    </form>
+
+    <div class="reset-container">
+        <h2>Reset Your Password</h2>
+        <p>Enter your email to continue</p>
+
+        <form action="/Password/html.files/passwordreset.html" method="GET">
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="example@gmail.com" required>
+            </div>
+
+            <button type="submit">Next</button>
+
+        </form>
+    </div>
+
 </body>
 </html>

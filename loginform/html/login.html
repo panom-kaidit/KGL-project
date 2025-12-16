@@ -7,55 +7,56 @@
     <link rel="stylesheet" href="/loginform/css/login.css">
 </head>
 <body>
-    <div class="form-header">
-        <p>Please enter your details</p>
-        <h1>Karibu</h1>
-        <h2>Welcomes You Back</h2>
-    </div>
-    <form action="" class="form-box">
-        <br><br>
-        <!-- email adress or username details -->
-        <div class="user-name">
-            <label for="email">Email Adress</label>
-            <br>
-            <input class="input" type="email" id="email" placeholder="example@gmail.com" required>
+
+    <div class="login-container">
+
+        <!-- Header -->
+        <div class="form-header">
+            <img src="/images/logo/karibu icon.png" alt="Karibu Logo">
+            <h1>Karibu</h1>
+            <h2>Welcomes You Back</h2>
+            <p>Please enter your details</p>
         </div>
 
-        <br>
+        <!-- Form -->
+        <form class="form-box">
 
-        <!-- Password for security and account acess -->
-        <div class="pass-code">
-            <label for="passcode">Password</label>
-            <br>
-            <input class="input" type="password" id="passcode" required>
-        </div>
-
-         <br><br>
-
-        <!-- If password is forgoten -->
-        <div class="remember">
-            <div>
-                <input type="radio" id="Remember">
-
-                <label for="Remember">Remember Me</label>
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input class="input" type="email" id="email" placeholder="example@gmail.com" required>
             </div>
-            
-            <a href="/Password/html.files/passcodeset.html">Forgot password</a>
-        </div>
-        
-        <br>
 
-        <!-- Log in button -->
-        <div class="submit-btn">
-            <input type="submit">
-        </div>
+            <!-- Password -->
+            <div class="form-group">
+                <label for="passcode">Password</label>
+                <input class="input" type="password" id="passcode" required>
+            </div>
 
-        <br>
+            <!-- Remember & Forgot -->
+            <div class="remember">
+                <label>
+                    <input type="checkbox">
+                    Remember Me
+                </label>
 
-        <!-- Link to create an account -->
-        <div>
-            <label for="">Don't have an account? <a href="/signup forms/html.files/signup-page.html">sign up</a></label>
-        </div>
-    </form>
+                <a href="/Password/html.files/passcodeset.html">Forgot password?</a>
+            </div>
+
+            <!-- Submit -->
+            <div class="submit-btn">
+                <button type="submit">Sign In</button>
+            </div>
+
+            <!-- Signup -->
+            <div class="signup-link">
+                <p>Don't have an account?
+                    <a href="/signup forms/html.files/signup-page.html">Sign up</a>
+                </p>
+            </div>
+
+        </form>
+    </div>
+
 </body>
 </html>

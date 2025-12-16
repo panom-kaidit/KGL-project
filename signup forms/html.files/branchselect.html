@@ -3,42 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Select Branch & Role</title>
+    <link rel="stylesheet" href="/signup forms/css/branchselect.css">
 </head>
 <body>
-    <form action="">
-        <br><br>
-        <p>Welcome to the branch selection page</p>
-        <br>
-        <div>
-            <label for="branch1" >Branch A</label>
-            <input type="radio" id="branch1" name="branch">
-        </div>
-        <div>
-            <label for="branch2">Branch B</label>
-            <input type="radio" id="branch1" name="branch">
-        </div>
-        <br><br>
-        <p>Employment status</p>
-        <div>
-            <label for="manager">Manager</label>
-            <input type="radio" id="manager" name="employment-status">
-        </div>
-        <div>
-            <label for="director">Director</label>
-            <input type="radio" id="director" name="employment-status">
-        </div>
-        <div>
-            <label for="supplier">Supplier</label>
-            <input type="radio" id="supplier" name="employment-status">
-        </div>
-        <div>
-            <label for="agent">Sales Agent</label>
-            <input type="radio" id="agent" name="employment-status">
-        </div>
 
-        <!-- the submit button should take us to the next page if all the sides have been meet -->
-        <button type="submit"><a href="/password/html.files/settingpasscode.html">Next</a></button>
+<div class="select-container">
+    <h2>Welcome</h2>
+    <p>Please select your branch and role</p>
+
+    <form action="/password/html.files/settingpasscode.html" method="GET">
+
+        <!-- Branch Selection -->
+        <fieldset>
+            <legend>Branch</legend>
+
+            <label>
+                <input type="radio" name="branch" value="Branch A" required>
+                Branch A
+            </label>
+
+            <label>
+                <input type="radio" name="branch" value="Branch B">
+                Branch B
+            </label>
+        </fieldset>
+
+        <!-- Role Selection -->
+        <fieldset>
+            <legend>Employment Status</legend>
+
+            <label>
+                <input type="radio" name="role" value="Manager" required>
+                Manager
+            </label>
+
+            <label>
+                <input type="radio" name="role" value="Director">
+                Director
+            </label>
+
+            <label>
+                <input type="radio" name="role" value="Supplier">
+                Supplier
+            </label>
+
+            <label>
+                <input type="radio" name="role" value="Sales Agent">
+                Sales Agent
+            </label>
+        </fieldset>
+
+        <button type="submit">Next</button>
     </form>
+</div>
+
 </body>
 </html>
