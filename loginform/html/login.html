@@ -4,12 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign in page</title>
+    <link rel="stylesheet" href="/loginform/css/login.css">
 </head>
 <body>
-    <form action="">
+    <div class="form-header">
+        <p>Please enter your details</p>
+        <h1>Karibu</h1>
+        <h2>Welcomes You Back</h2>
+    </div>
+    <form action="" class="form-box">
         <br><br>
         <!-- email adress or username details -->
-        <div>
+        <div class="user-name">
             <label for="email">Email Adress</label>
             <br>
             <input type="email" id="email" placeholder="example@gmail.com" required>
@@ -18,7 +24,7 @@
         <br>
 
         <!-- Password for security and account acess -->
-        <div>
+        <div class="pass-code">
             <label for="passcode">Password</label>
             <br>
             <input type="password" id="passcode" required>
