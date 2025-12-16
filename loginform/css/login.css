@@ -1,0 +1,43 @@
+* {
+    margin: auto;
+
+}
+
+/* applies to the whole body */
+body {
+    border: 8px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+/* the form box */
+.form-box {
+    flex-wrap: wrap;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+/* inputs field editing */
+.input {
+    width: 150%;
+    height: 100%;
+    flex-wrap: wrap;
+}
+
+/* remember Me editing */
+.remember {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+
+
+/* summit button */
+.submit-btn { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
