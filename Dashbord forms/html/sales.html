@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Form</title>
+    <link rel="stylesheet" href="/Dashbord forms/CSS/sales.css">
+</head>
+<body>
+
+    <div class="login-container">
+
+        <!-- Header -->
+        <div class="form-header">
+            <img src="/images/logo/karibu icon.png" alt="Karibu icon">
+            <h1>Karibu</h1>
+            <h2>Sales Form</h2>
+            <p>Please enter sale details</p>
+        </div>
+
+        <!-- Form -->
+        <form class="form-box">
+
+            <!-- Sale Info -->
+            <div class="form-group">
+                <label for="sale-id">Sale ID / Receipt Number</label>
+                <input class="input" type="text" id="sale-id" placeholder="Receipt number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="sale-date">Sale Date</label>
+                <input class="input" type="date" id="sale-date" required>
+            </div>
+
+            <!-- Customer Info -->
+            <div class="form-group">
+                <label for="customer-name">Customer Name</label>
+                <input class="input" type="text" id="customer-name" placeholder="Customer name">
+            </div>
+
+            <div class="form-group">
+                <label for="customer-phone">Customer Phone</label>
+                <input class="input" type="tel" id="customer-phone" placeholder="Phone number">
+            </div>
+
+            <!-- Product Info -->
+            <div class="form-group">
+                <label for="product-name">Product Name</label>
+                <input class="input" type="text" id="product-name" placeholder="Product name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="product-category">Product Category</label>
+                <input class="input" type="text" id="product-category" placeholder="Category">
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">Quantity Sold</label>
+                <input class="input" type="number" id="quantity" required>
+            </div>
+
+            <div class="form-group">
+                <label for="unit-price">Unit Price</label>
+                <input class="input" type="number" step="0.01" id="unit-price" required>
+            </div>
+
+
+            <div class="form-group">
+                <label for="sales-person">Sales Person</label>
+                <input class="input" type="text" id="sales-person" placeholder="Your name" required>
+            </div>
+
+
+            <div class="form-group">
+                <label for="amount-paid">Amount Paid</label>
+                <input class="input" type="number" id="amount-paid" required>
+            </div>
+
+            <!-- Payment Info -->
+            <div class="form-group">
+                <label>Payment Method</label>
+                <div class="remember">
+                    <label><input type="radio" name="payment"> Cash</label>
+                    <label><input type="radio" name="payment"> Mobile Money</label>
+                    <label><input type="radio" name="payment"> Card</label>
+                </div>
+            </div>
+
+            <!-- Payment Status -->
+            <div class="form-group">
+                <label>Payment Status</label>
+                <div class="remember">
+                    <label>
+                        <input type="radio" name="payment_status" value="paid"> Paid
+                    </label>
+                    <label>
+                        <input type="radio" name="payment_status" value="pending"> Pending
+                    </label>
+                    <label>
+                        <input type="radio" name="payment_status" value="partial"> Partial
+                    </label>
+                </div>
+            </div>
+            <!-- Submit -->
+            <div class="submit-btn">
+                <button type="submit">Submit Sale</button>
+            </div>
+
+        </form>
+    </div>
+
+</body>
+</html>
