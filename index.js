@@ -5,3 +5,4 @@ const user = {
   phone: '0700123456',
   address: 'Kampala',
 };
+console.table(user)
