@@ -109,7 +109,7 @@ body {
 .submit-btn button {
     width: 100%;
     padding: 10px;
-    background: #1B5E20;
+    background: #144d18;
     color: #ffffff;
     border: none;
     border-radius: 6px;
@@ -117,7 +117,8 @@ body {
 }
 
 .submit-btn button:hover {
-    background: #144d18;
+    background: #1B5E20;
+
 }
 
 /* =========================

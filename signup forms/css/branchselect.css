@@ -54,7 +54,7 @@ label {
 button {
     width: 100%;
     padding: 12px;
-    background: #1B5E20;
+    background: #144d18;
     color: white;
     border: none;
     border-radius: 6px;
@@ -62,5 +62,5 @@ button {
 }
 
 button:hover {
-    background: #144d18;
+    background: #1B5E20;
 }
