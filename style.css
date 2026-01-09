@@ -1,6 +1,4 @@
-/* =========================
-   RESET
-========================= */
+
 * {
     margin: 0;
     padding: 0;
@@ -17,13 +15,18 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    animation: bgSlide 10s infinite alternate;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 /* =========================
    FORM CONTAINER
 ========================= */
 form {
-    background: #ffffff;
+    background: transparent;
     padding: 40px 30px;
     width: 350px;
     text-align: center;
@@ -35,21 +38,21 @@ form {
    HEADINGS
 ========================= */
 h1 {
-    color: #1B5E20;
+    color: #ffffff;
     margin-bottom: 10px;
 }
 
-h2 {
+/* h2 {
     font-size: 16px;
-    color: #555;
+    color: #ffffff;
     margin-top: 10px;
-}
+} */
 
 /* =========================
    LOGO
 ========================= */
 img {
-    width: 120px;
+    width: 250px;
     height: auto;
     margin: 15px 0;
 }
@@ -61,7 +64,7 @@ button {
     margin-top: 25px;
     width: 100%;
     padding: 12px;
-    background: #1B5E20;
+    background: #144d18;
     color: #ffffff;
     border: none;
     border-radius: 8px;
@@ -70,7 +73,7 @@ button {
 }
 
 button:hover {
-    background: #144d18;
+    background: #1B5E20;
 }
 
 /* =========================
@@ -80,4 +83,16 @@ button:hover {
     form {
         width: 90%;
     }
+}
+
+@keyframes bgSlide {
+  0% {
+    background-image: url("/images/Borcelle\ \(2\).jpg");
+  }
+  50% {
+    background-image: url("/images/just.jpg");
+  }
+  100% {
+    background-image: url("/images/Borcelle\ \(2\).jpg");
+  }
 }

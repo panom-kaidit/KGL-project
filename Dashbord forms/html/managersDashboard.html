@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KGL Manager Dashboard</title>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
+    <link rel="stylesheet" href="/Dashbord forms/CSS/managersDashboard.css">
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="/images/logo/karibu logo.png" alt="Karibu Logo">
+        </div>
+
+        <ul class="nav_menu">
+            <li><a href="#" class="active"><i class="fas fa-home"></i><span>Overview</span></a></li>
+            <li><a href="#"><i class="fas fa-cart-plus"></i><span>Procurement</span></a></li>
+            <li><a href="#"><i class="fas fa-box"></i><span>Stock Control</span></a></li>
+            <li><a href="#"><i class="fas fa-tags"></i><span>Pricing</span></a></li>
+            <li><a href="#"><i class="fas fa-users"></i><span>Agents</span></a></li>
+            <li><a href="#"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- TOP BAR -->
+        <div class="top-bar">
+            <h2>Stock Management</h2>
+            <a href="/Dashbord forms/html/procurementform.html" class="btn-primary">
+            <i class="fas fa-plus"></i> New Procurement
+            </a>
+        </div>
+
+        <!-- STATS CARDS -->
+        <div class="cards">
+            <div class="card green">
+                <h3>Total Stock</h3>
+                <h1>85%</h1>
+                <p>12 items well stocked</p>
+            </div>
+
+            <div class="card yellow">
+                <h3>Low Stock</h3>
+                <h1>3 Items</h1>
+                <p>Action needed soon</p>
+            </div>
+
+            <div class="card darkgreen">
+                <h3>Out of Stock</h3>
+                <h1>0 Items</h1>
+                <p>Stockup soon!</p>
+            </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-container">
+            <h3>Current Inventory</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Category</th>
+                        <th>Stock (KG)</th>
+                        <th>Cost/KG</th>
+                        <th>Sale Price/KG</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Maize</td>
+                        <td>Cereal</td>
+                        <td>1200</td>
+                        <td>$1.50</td>
+                        <td>$2.20</td>
+                        <td><span class="status green">In Stock</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>Rice</td>
+                        <td>Cereal</td>
+                        <td>150</td>
+                        <td>$0.80</td>
+                        <td>$1.20</td>
+                        <td><span class="status yellow">Low Stock</span></td>
+                    </tr>
+                    <tr>
+                        <td>Beans</td>
+                        <td>Cereal</td>
+                        <td>150</td>
+                        <td>$0.60</td>
+                        <td>$1.40</td>
+                        <td><span class="status yellow">Low Stock</span></td>
+                    </tr>
+                    <tr>
+                        <td>Soya</td>
+                        <td>Cereal</td>
+                        <td>15000</td>
+                        <td>$1.6</td>
+                        <td>$2.20</td>
+                        <td><span class="status green">In Stock</span></td>
+                    </tr>
+                    <tr>
+                        <td>Peas</td>
+                        <td>Cereal</td>
+                        <td>150</td>
+                        <td>$0.80</td>
+                        <td>$1.20</td>
+                        <td><span class="status yellow">Low Stock</span></td>
+                    </tr>                   
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+.sell--container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.product--grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+}
+
+.product--card {
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    transition: transform 0.3s;
+}
+
+.product--card:hover {
+    transform: translateY(-5px);
+}
+
+.product--card h4 {
+    color: #1B5E20;
+    margin-bottom: 8px;
+}
+
+.product--card p {
+    font-size: 14px;
+    margin-bottom: 1rem;
+}
+
+.product--card button {
+    background: #1B5E20;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.product--card button:hover {
+    background: #144d18;
+}
+
+
+/* ================= MOBILE RESPONSIVENESS ================= */
+@media (max-width: 768px) {
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: -260px;
+        top: 0;
+        width: 240px;
+        height: 100%;
+        z-index: 1000;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .main--content {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .sidebar:hover {
+        width: 240px;
+    }
+
+    .nav_menu span {
+        opacity: 1;
+    }
+
+    .nav_menu a {
+        justify-content: flex-start;
+    }
+
+    .menu-toggle {
+        font-size: 1.5rem;
+        color: #1B5E20;
+        cursor: pointer;
+    }
+}

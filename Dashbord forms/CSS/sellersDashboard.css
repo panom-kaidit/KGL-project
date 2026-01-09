@@ -1,3 +1,4 @@
+
 * {
     margin: 0;
     padding: 0;
@@ -8,29 +9,23 @@
 body {
     display: flex;
     min-height: 100vh;
+    background: #ebe9eb;
 }
 
-/* SIDEBAR */
+/* ================= SIDEBAR ================= */
 .sidebar {
     position: sticky;
     top: 0;
     left: 0;
-    bottom: 0;
-    width: 110px;
-    height: 100vh;
+    width: 240px;          
+    min-height: 100vh;
     padding: 20px;
     background: #144d18;
     color: #ffffff;
     overflow: hidden;
-    transition: all 0.5s;
-
 }
 
-.sidebar:hover {
-    width: 240px;
-    transition: 0.5s;
-}
-/* LOGO */
+/* ================= LOGO ================= */
 .logo {
     text-align: center;
     margin-bottom: 40px;
@@ -40,7 +35,7 @@ body {
     width: 120px;
 }
 
-/* MENU */
+/* ================= MENU ================= */
 .nav_menu {
     list-style: none;
 }
@@ -57,16 +52,319 @@ body {
     color: #ffffff;
     text-decoration: none;
     border-radius: 8px;
+    justify-content: flex-start;
     transition: background 0.3s;
 }
 
-/* ICON */
+
+.nav_menu span {
+    opacity: 1;
+    white-space: nowrap;
+    transition: opacity 0.3s;
+}
+
+
+/* ================= ICON ================= */
 .nav_menu i {
     font-size: 18px;
 }
 
-/* HOVER EFFECT */
+/* ================= HOVER & ACTIVE ================= */
 .nav_menu a:hover {
     background: #1B5E20;
+}
 
+.nav_menu a.active {
+    background: #1B5E20;
+    font-weight: 500;
+}
+
+/* ================= MAIN CONTENT ================= */
+.main--content {
+    flex: 1;
+    padding: 20px;
+}
+
+/* ================= HEADER ================= */
+.header--wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 12px 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    gap: 10px;
+}
+
+.header--title {
+    color: #1B5E20;
+}
+
+.header--wrapper img {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+/* ================= USER INFO ================= */
+.user--info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* ================= SEARCH ================= */
+.search--box {
+    background: #ededed;
+    border-radius: 15px;
+    color: #1B5E20;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+}
+
+.search--box input {
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 8px;
+}
+
+.search--box i {
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.search--box i:hover {
+    transform: scale(1.1);
+}
+
+/* ================= CARDS CONTAINER ================= */
+.card--container {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.main--title {
+    color: #1B5E20;
+    padding-bottom: 1rem;
+    font-size: 15px;
+}
+
+/* ================= GRID LAYOUT ================= */
+.card--wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+/* ================= INDIVIDUAL CARD ================= */
+.payment--card {
+    background: #fdfdfd;
+    border-radius: 12px;
+    padding: 1.4rem;
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid #eeeeee;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.payment--card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* ================= CARD HEADER ================= */
+.card--header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* ================= AMOUNT ================= */
+.amount {
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 12px;
+    font-weight: 400;
+    color: #777;
+}
+
+.amount--value {
+    font-size: 24px;
+    font-family: "Courier New", Courier, monospace;
+    font-weight: 600;
+    color: #222;
+}
+
+/* ================= CARD DETAILS ================= */
+.card-detail {
+    font-size: 12px;
+    color: #777;
+}
+
+/* ================= ICON ================= */
+.icon {
+    color: #ffffff;
+    padding: 1rem;
+    height: 60px;
+    width: 60px;
+    text-align: center;
+    border-radius: 50%;
+    font-size: 1.5rem;
+}
+
+/* ================= ICON COLORS ================= */
+.icon.green {
+    background: #1B5E20;
+}
+
+.icon.blue {
+    background: #1976d2;
+}
+
+.icon.orange {
+    background: #f9a825;
+}
+
+.icon.purple {
+    background: #6a1b9a;
+}
+
+/* ================= MOBILE RESPONSIVENESS ================= */
+/* ================= TABLET (≤ 1024px) ================= */
+@media (max-width: 1024px) {
+
+  .sidebar {
+    width: 200px;
+  }
+
+  .logo img {
+    width: 100px;
+  }
+
+  .card--wrapper {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+
+
+/* ================= MOBILE & SMALL TABLETS (≤ 768px) ================= */
+@media (max-width: 768px) {
+
+  body {
+    flex-direction: column;
+  }
+
+  /* SIDEBAR BECOMES TOP NAV */
+  .sidebar {
+    position: relative;
+    width: 100%;
+    min-height: auto;
+    padding: 12px 16px;
+  }
+
+  .logo {
+    margin-bottom: 10px;
+  }
+
+  /* ORDERED TOP NAVIGATION */
+  .nav_menu {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    text-align: center;
+  }
+
+  .nav_menu li {
+    margin: 0;
+  }
+
+  .nav_menu a {
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+
+  .nav_menu i {
+    font-size: 20px;
+  }
+
+  .nav_menu span {
+    opacity: 1;
+    font-size: 12px;
+  }
+
+  /* MAIN CONTENT */
+  .main--content {
+    padding: 15px;
+  }
+
+  /* HEADER STACKS NICELY */
+  .header--wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .user--info {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+
+/* ================= SMALL PHONES (≤ 480px) ================= */
+@media (max-width: 480px) {
+
+  /* TWO ITEMS PER ROW IN NAV */
+  .nav_menu {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* HIDE SEARCH TO SAVE SPACE */
+  .search--box {
+    display: none;
+  }
+
+  .amount--value {
+    font-size: 18px;
+  }
+
+  .payment--card {
+    height: auto;
+  }
+
+  .icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  h3 {
+    font-size: 1rem;
+  }
 }
