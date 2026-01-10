@@ -20,7 +20,7 @@ body {
     width: 240px;          
     min-height: 100vh;
     padding: 20px;
-    background: orange;
+    background: #144d18;
     color: #ffffff;
     overflow: hidden;
 }
@@ -71,11 +71,11 @@ body {
 
 /* ================= HOVER & ACTIVE ================= */
 .nav_menu a:hover {
-    background: #1b2d5e;
+    background: #1B5E20;
 }
 
 .nav_menu a.active {
-    background: blue;
+    background: #1B5E20;
     font-weight: 500;
 }
 
