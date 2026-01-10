@@ -88,7 +88,7 @@ body {
     align-items: center;
     gap: 8px;
 
-    background: #1B5E20;
+    background: #144d18;
     color: #ffffff;
     text-decoration: none; /* removes underline */
 
@@ -104,7 +104,7 @@ body {
 
 /* Hover effect */
 .btn-primary:hover {
-    background: #144d18;
+    background: #1B5E20;
     transform: translateY(-2px);
 }
 
@@ -223,5 +223,12 @@ th {
         flex-direction: column;
         gap: 10px;
         align-items: flex-start;
+    }
+}
+
+/* Beginner Friendly: Make table scrollable on mobile */
+@media (max-width: 768px) {
+    .table-container {
+        overflow-x: auto;
     }
 }

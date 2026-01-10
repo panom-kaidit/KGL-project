@@ -95,3 +95,11 @@
         cursor: pointer;
     }
 }
+
+/* Beginner Friendly: Resize profile card on mobile */
+@media (max-width: 768px) {
+    .profile--card {
+        width: 90%;
+        margin: 0 auto;
+    }
+}

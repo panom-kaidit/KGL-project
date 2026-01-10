@@ -35,7 +35,7 @@
 }
 
 .product--card button {
-    background: #1B5E20;
+    background: #144d18;
     color: #fff;
     border: none;
     padding: 8px 16px;
@@ -44,7 +44,7 @@
 }
 
 .product--card button:hover {
-    background: #144d18;
+    background: #1B5E20;
 }
 
 
@@ -89,5 +89,12 @@
         font-size: 1.5rem;
         color: #1B5E20;
         cursor: pointer;
+    }
+}
+
+/* Beginner Friendly: Reduce padding on mobile */
+@media (max-width: 768px) {
+    .sell--container {
+        padding: 1rem;
     }
 }

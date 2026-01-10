@@ -156,3 +156,11 @@ body {
         grid-column: span 1;
     }
 }
+
+/* Extra fix for very small screens */
+@media (max-width: 700px) {
+    .login-container {
+        width: 90%;
+        margin: 0 auto;
+    }
+}

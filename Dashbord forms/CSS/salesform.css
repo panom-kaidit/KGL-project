@@ -135,3 +135,11 @@ body {
         grid-column: span 1;
     }
 }
+
+/* Extra responsive fix */
+@media (max-width: 700px) {
+    .login-container {
+        width: 90%;
+        margin: 0 auto;
+    }
+}
