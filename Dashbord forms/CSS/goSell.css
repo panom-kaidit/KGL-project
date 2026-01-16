@@ -47,7 +47,9 @@
     background: #1B5E20;
 }
 
-
+/* .maize {
+    background-image: image-set();
+} */
 /* ================= MOBILE RESPONSIVENESS ================= */
 @media (max-width: 768px) {
 

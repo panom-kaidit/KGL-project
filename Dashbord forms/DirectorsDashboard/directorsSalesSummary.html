@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Summary | Director Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/Dashbord forms/DirectorsDashboard/directorsDashboard.css">
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="/images/logo/karibu logo.png" alt="Karibu Logo" />
+        </div>
+
+        <ul class="nav_menu">
+            <li>
+                <a href="/Dashbord forms/DirectorsDashboard/directorsDashboard.html">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Dashbord forms/DirectorsDashboard/directorsSalesSummary.html" class="active">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Sales Summary</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Dashbord forms/DirectorsDashboard/directorsBranchPerformance.html">
+                    <i class="fas fa-building"></i>
+                    <span>Branch Performance</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Dashbord forms/DirectorsDashboard/directorsReports.html">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Dashbord forms/DirectorsDashboard/directorsAnalytics.html">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Analytics</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Dashbord forms/DirectorsDashboard/directorsProfile.html">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- TOP BAR -->
+        <div class="top-bar">
+            <h2>Sales Summary</h2>
+            <div class="user-info">
+                <span>Welcome, Director</span>
+                <img src="/images/logo/karibu icon.png" alt="Director">
+            </div>
+        </div>
+
+        <!-- FILTERS -->
+        <div class="filters">
+            <label>Date Range:</label>
+            <input type="date">
+            <span>to</span>
+            <input type="date">
+            
+            <label>Branch:</label>
+            <select>
+                <option>All Branches</option>
+                <option>Kampala Main</option>
+                <option>Jinja Road</option>
+                <option>Entebbe</option>
+            </select>
+            
+            <label>Category:</label>
+            <select>
+                <option>All Categories</option>
+                <option>Cereals</option>
+                <option>Legumes</option>
+                <option>Flour</option>
+            </select>
+            
+            <button>Filter</button>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="cards">
+            <div class="card">
+                <h3>Total Sales Amount</h3>
+                <h1>UGX 4.5M</h1>
+                <p>Selected Period</p>
+            </div>
+            <div class="card">
+                <h3>Transactions</h3>
+                <h1>450</h1>
+                <p>Count</p>
+            </div>
+            <div class="card">
+                <h3>Avg. Sale Value</h3>
+                <h1>UGX 10,000</h1>
+                <p>Per Transaction</p>
+            </div>
+        </div>
+
+        <!-- DETAILED TABLE -->
+        <div class="table-container">
+            <h3>Sales Breakdown by Category</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Units Sold (KG)</th>
+                        <th>Total Revenue</th>
+                        <th>% of Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Maize</td>
+                        <td>1,200</td>
+                        <td>UGX 2,400,000</td>
+                        <td>45%</td>
+                    </tr>
+                    <tr>
+                        <td>Beans</td>
+                        <td>800</td>
+                        <td>UGX 1,600,000</td>
+                        <td>30%</td>
+                    </tr>
+                    <tr>
+                        <td>Rice</td>
+                        <td>400</td>
+                        <td>UGX 1,000,000</td>
+                        <td>15%</td>
+                    </tr>
+                    <tr>
+                        <td>Soya</td>
+                        <td>200</td>
+                        <td>UGX 500,000</td>
+                        <td>10%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+</body>
+</html>
