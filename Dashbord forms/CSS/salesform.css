@@ -88,6 +88,12 @@ body {
     border-color: #1B5E20;
 }
 
+.select option{
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
 /* =========================
    RADIO (PAYMENT METHOD)
 ========================= */
