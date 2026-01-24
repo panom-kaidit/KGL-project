@@ -83,13 +83,16 @@ body {
     font-size: 13px;
 }
 
+[type="checkbox"]{
+    background-color: #1B5E20;
+}
 .remember a {
     text-decoration: none;
     color: #1B5E20;
 }
 
 /* Button */
-.submit-btn button {
+.submit-btn{
     width: 100%;
     padding: 10px;
     background: #144d18;
@@ -99,7 +102,7 @@ body {
     cursor: pointer;
 }
 
-.login-btn {
+.submit-btn {
     display: block;
     text-align: center;
     background: #144d18;
@@ -110,12 +113,12 @@ body {
     font-weight: 500;
 }
 
-.login-btn:hover {
+.submit-btn:hover {
     background: #1B5E20;
 }
 
-.submit-btn button:hover {
-    background: #144d18;
+.submit-btn :hover {
+    background: #1B5E20;
 
 }
 
