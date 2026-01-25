@@ -1,112 +1,122 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Karibu Sales Agent Page</title>
 
     <!-- Font Awesome -->
     <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/Dashbord forms/CSS/sellersDashboard.css" />
     <link rel="stylesheet" href="/Dashbord forms/CSS/goSell.css" />
-</head>
+  </head>
 
-<body>
-
+  <body>
     <!-- SIDEBAR -->
     <aside class="sidebar">
-        <div class="logo">
-            <img src="/images/logo/karibu logo.png" alt="Karibu Logo" />
-        </div>
+      <div class="logo">
+        <img src="/images/logo/karibu logo.png" alt="Karibu Logo" />
+      </div>
 
-        <ul class="nav_menu">
-            <li>
-                <a href="/Dashbord forms/html/sellersDashboard.html">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
+      <ul class="nav_menu">
+        <li>
+          <a href="/Dashbord forms/html/sellersDashboard.html">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
 
-            <li>
-                <a href="/Dashbord forms/html/profile.html">
-                    <i class="fas fa-user"></i>
-                    <span>Profile</span>
-                </a>
-            </li>
+        <li>
+          <a href="/Dashbord forms/html/profile.html">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+          </a>
+        </li>
 
-            <li>
-                <a href="/Dashbord forms/html/goSell.html" class="active">
-                    <i class="fas fa-store"></i>
-                    <span>Go Sell</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Logout</span>
-                </a>
-            </li>
-        </ul>
+        <li>
+          <a href="/Dashbord forms/html/goSell.html" class="active">
+            <i class="fas fa-store"></i>
+            <span>Go Sell</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </a>
+        </li>
+      </ul>
     </aside>
 
     <!-- MAIN CONTENT -->
     <main class="main--content">
-
-        <!-- HEADER -->
-        <div class="header--wrapper">
-            <div class="header--title">
-                <span>Sales</span>
-                <h2>Go Sell</h2>
-            </div>
+      <!-- HEADER -->
+      <div class="header--wrapper">
+        <div class="header--title">
+          <span>Sales</span>
+          <h2>Go Sell</h2>
         </div>
+      </div>
 
-        <!-- SELL CONTAINER -->
-        <section class="sell--container">
-            <h3 class="main--title">Available Products</h3>
+      <!-- SELL CONTAINER -->
+      <section class="sell--container">
+        <h3 class="main--title">Available Products</h3>
 
-            <div class="product--grid">
+        <div class="product--grid">
+          <div class="product--card maize">
+            <h4>Maize</h4>
+            <p>UGX 2,500 / Kg</p>
+            <a href="/Dashbord forms/html/salesform.html">
+              <button>Select</button>
+            </a>
+          </div>
 
-                <div class="product--card maize">
-                    <h4>Maize</h4>
-                    <p>UGX 2,500 / Kg</p>
-                    <a href="/Dashbord forms/html/salesform.html">
-                        <button>Select</button>
-                    </a>
-                </div>
+          <div class="product--card beans">
+            <h4>Beans</h4>
+            <p>UGX 3,000 / Kg</p>
+            <a href="/Dashbord forms/html/salesform.html">
+              <button>Select</button>
+            </a>
+          </div>
 
-                <div class="product--card">
-                    <h4>Beans</h4>
-                    <p>UGX 3,000 / Kg</p>
-                    <a href="/Dashbord forms/html/salesform.html">
-                        <button>Select</button>
-                    </a>
-                </div>
+          <div class="product--card cowpeas">
+            <h4>Cow Peas</h4>
+            <p>UGX 4,500 / Kg</p>
+            <a href="/Dashbord forms/html/salesform.html">
+              <button>Select</button>
+            </a>
+          </div>
 
-                <div class="product--card">
-                    <h4>Rice</h4>
-                    <p>UGX 4,500 / Kg</p>
-                    <a href="/Dashbord forms/html/salesform.html">
-                        <button>Select</button>
-                    </a>
-                </div>
+          <div class="product--card g-nuts">
+            <h4>G-nuts</h4>
+            <p>UGX 4,500 / Kg</p>
+            <a href="/Dashbord forms/html/salesform.html">
+              <button>Select</button>
+            </a>
+          </div>
 
-                <div class="product--card">
-                    <h4>Soya</h4>
-                    <p>UGX 3,800 / Kg</p>
-                    <a href="/Dashbord forms/html/salesform.html">
-                        <button>Select</button>
-                    </a>
-                </div>
-
-            </div>
-        </section>
-
+          <div class="product--card soya">
+            <h4>Soybeans</h4>
+            <p>UGX 3,800 / Kg</p>
+            <a href="/Dashbord forms/html/salesform.html">
+              <button>Select</button>
+            </a>
+          </div>
+        </div>
+      </section>
+      <section class="sell-btn-wrapper">
+        <div>
+          <button class="sell-form" class="sell-form" onclick="location.href='/Dashbord forms/html/salesform.html'">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span>Sell</span>
+          </button>
+        </div>
+      </section>
     </main>
-
-</body>
+  </body>
 </html>

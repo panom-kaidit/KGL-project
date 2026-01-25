@@ -12,44 +12,95 @@
 }
 
 .product--card {
-    background: #f9f9f9;
+    position: relative;
+    height: 230px;
     padding: 1.5rem;
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.06);
     transition: transform 0.3s;
+
+    background-size: 200px;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #fff;
+}
+
+.product--card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    border-radius: 10px;
+}
+
+.product--card > * {
+    position: relative;
+    z-index: 1;
 }
 
 .product--card:hover {
     transform: translateY(-5px);
 }
 
-.product--card h4 {
-    color: #1B5E20;
-    margin-bottom: 8px;
-}
-
+.product--card h4,
 .product--card p {
-    font-size: 14px;
-    margin-bottom: 1rem;
+    color: #1B5E20;
 }
 
-.product--card button {
+/* Product images */
+.maize {
+    background-image: url("/images/Products/Maize.jpg");
+}
+
+.beans {
+    background-image: url("/images/Products/beans.jpg");
+}
+
+.cowpeas {
+    background-image: url("/images/Products/Cow pea.jpg");
+}
+
+.soya {
+    background-image: url("/images/Products/Soya.jpg");
+}
+
+.g-nuts {
+    background-image: url("/images/Products/G-nuts.jpg");
+}
+
+
+
+.product--card button{
     background: #144d18;
-    color: #fff;
-    border: none;
+    color: #ffffff;
+    border:none;
     padding: 8px 16px;
     border-radius: 6px;
-    cursor: pointer;
 }
 
-.product--card button:hover {
+.product--card button:hover{
     background: #1B5E20;
 }
 
-/* .maize {
-    background-image: image-set();
-} */
+/* Sell form button
+ */
+
+ .sell-btn-wrapper{
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+ }
+ .sell-form{
+    background: #144d18;
+    align-items: center;
+    color: #fff;
+    padding: 20px 30px;
+    border: none;
+    border-radius: 5px;
+
+ }
+
 /* ================= MOBILE RESPONSIVENESS ================= */
 @media (max-width: 768px) {
 
