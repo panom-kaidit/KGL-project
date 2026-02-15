@@ -16,6 +16,15 @@ const connectDb = require(
 );
 
 connectDb();
+
+// Importing the  routers
+const procurementRoutes = require(path.join(__dirname,"src","routes","procurementRoutes"));
+const salesRoutes = require(path.join(__dirname,"src","routes","salesRoutes"));
+const userRoutes = require(path.join(__dirname,"src","routes","userRoutes"));
+
+app.use("/procurement", procurementRoutes);
+app.use("/sales", salesRoutes);
+app.use("/users", userRoutes);
 // server listening
 app.listen(port,(err)=>{
     if(err){
