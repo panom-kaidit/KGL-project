@@ -11,7 +11,7 @@ const saleSchema = new mongoose.Schema({
   amountDue: Number,
 
   buyerName: String,
-  nin: String,
+  NationalID: String,
   location: String,
   contact: String,
 

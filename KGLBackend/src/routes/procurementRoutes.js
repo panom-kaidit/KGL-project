@@ -1,9 +1,14 @@
 const express = require("express");
 
+const authMiddleware = require("../middlewares/authMiddleware");
+const authRole = require("../middlewares/rbaMiddleware");
 const router = express.Router();
 
-// test route
-router.get("/test", (req, res) => {
+// lets allow the manager to access the procurements only
+router.post("/",
+  authMiddleware,
+  authRole("Manager"),
+  async (req, res) => {
   res.status(200).json({ message: "Procurement router working" });
 });
 

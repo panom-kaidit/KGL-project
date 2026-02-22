@@ -4,7 +4,7 @@ const path = require('path');
 // creating express server and initialise it 
 const express = require('express');
 const app = express();
-
+ 
 // importing dotenv
 require('dotenv').config();
 
@@ -16,7 +16,7 @@ const connectDb = require(
 );
 
 connectDb();
-
+app.use(express.json());
 // Importing the  routers
 const procurementRoutes = require(path.join(__dirname,"src","routes","procurementRoutes"));
 const salesRoutes = require(path.join(__dirname,"src","routes","salesRoutes"));
@@ -30,7 +30,7 @@ app.listen(port,(err)=>{
     if(err){
         console.log(err)
     }else{
-        console.log('Listening to the port');
+        console.log(`Listening on port ${port}`);
         
     }
 })

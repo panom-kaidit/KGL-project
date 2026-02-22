@@ -1,3 +1,5 @@
+const { default: mongoose } = require("mongoose");
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -17,7 +19,17 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["manager", "sales agent", "director"],
-    default: "sales agent"
+    enum: ["Manager", "Sales-agent", "Director"],
+    default: "sales agent",
+    required: true
+  },
+  branch: {
+    type: String,
+    enum: ["Matugga","Maganjo"],
+  
   }
 });
+
+const UserModel = mongoose.model('Users', userSchema)
+
+module.exports = UserModel
