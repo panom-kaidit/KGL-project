@@ -1,6 +1,10 @@
 // importing the path module
 const path = require('path');
 
+// importing swagger to server
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./src/config/swagger");
+
 // creating express server and initialise it 
 const express = require('express');
 const app = express();
@@ -22,6 +26,7 @@ const procurementRoutes = require(path.join(__dirname,"src","routes","procuremen
 const salesRoutes = require(path.join(__dirname,"src","routes","salesRoutes"));
 const userRoutes = require(path.join(__dirname,"src","routes","userRoutes"));
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/procurement", procurementRoutes);
 app.use("/sales", salesRoutes);
 app.use("/users", userRoutes);
