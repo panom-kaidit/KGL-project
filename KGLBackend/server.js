@@ -8,7 +8,9 @@ const swaggerSpec = require("./src/config/swagger");
 // creating express server and initialise it 
 const express = require('express');
 const app = express();
- 
+// initialising cors
+const cors = require('cors');
+app.use(cors());
 // importing dotenv
 require('dotenv').config();
 
