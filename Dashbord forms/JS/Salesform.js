@@ -8,14 +8,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const decodedToken = token ? decodeToken(token) : null;
   const userName = decodedToken ? decodedToken.name : '';
 
-  // Pre-fill sales agent names
-  if (userName) {
-    // For cash form
-    document.getElementById('cash-sales-agent').value = userName;
-    // For credit form - populate the sales agent field
-    document.getElementById('credit-sales-agent').value = userName;
-    document.getElementById('credit-sales-agent').readOnly = true;
+  if (!userName) {
+    alert('Error: User name not found. Please log in again.');
+    window.location.href = '/loginform/html/login.html';
+    return;
   }
+
+  // Pre-fill and lock sales agent names
+  document.getElementById('cash-sales-agent').value = userName;
+  document.getElementById('cash-sales-agent').readOnly = true;
+  document.getElementById('credit-sales-agent').value = userName;
+  document.getElementById('credit-sales-agent').readOnly = true;
 
   // Attach submit handlers
   cashForm.addEventListener('submit', handleCashSubmit);
@@ -188,7 +191,13 @@ async function handleCashSubmit(e) {
   const saleId = document.getElementById('sale-id').value;
   const buyer = document.getElementById('customer-name').value;
   const phone = document.getElementById('customer-phone').value;
-  const salesAgent = document.getElementById('cash-sales-agent').value;
+  
+  // Use logged-in user's name from token
+  const token = getToken();
+  const decodedToken = decodeToken(token);
+  const salesAgent = decodedToken ? decodedToken.name : 'Unknown';
+
+  console.log('Sales Agent:', salesAgent);
 
   // Submit a separate sale record for each product
   let successCount = 0;
@@ -246,12 +255,16 @@ async function handleCreditSubmit(e) {
   const location = document.getElementById('credit-location').value;
   const contacts = document.getElementById('credit-contacts').value;
   const amountDue = Number(document.getElementById('amount-due').value);
-  const salesAgent = document.getElementById('credit-sales-agent').value || (decodeToken(getToken()) || {}).name;
   const dueDate = document.getElementById('credit-due-date').value;
   const dispatchDate = document.getElementById('dispatch-date').value;
 
   if (!buyer || !nationalId) return alert('Buyer name and NIN required');
   if (creditProducts.length === 0) return alert('Add at least one product');
+
+  // Use logged-in user's name from token
+  const token = getToken();
+  const decodedToken = decodeToken(token);
+  const salesAgent = decodedToken ? decodedToken.name : 'Unknown';
 
   console.log('Starting credit sale submission. Total products:', creditProducts.length);
   console.log('Products:', creditProducts);
