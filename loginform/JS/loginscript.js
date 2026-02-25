@@ -1,3 +1,10 @@
+
+// Get form and inputs
+const form = document.getElementById("form-box");
+const userMail = document.getElementById("email");
+const passCode = document.getElementById("passcode");
+
+
 // Function to decode JWT token
 function decodeToken(token) {
     try {
@@ -9,12 +16,6 @@ function decodeToken(token) {
         return null;
     }
 }
-
-// Get form and inputs
-const form = document.getElementById("form-box");
-const userMail = document.getElementById("email");
-const passCode = document.getElementById("passcode");
-
 form.addEventListener("submit", async function (event) {
     event.preventDefault();
 

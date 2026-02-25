@@ -1,11 +1,12 @@
 const express = require("express");
 const authMiddleware = require("../middlewares/authMiddleware");
 const authRole = require("../middlewares/rbaMiddleware");
+const Sale = require("../models/sales");
 const router = express.Router();
 router.post(
   "/",
   authMiddleware,
-  authRole("SalesAgent"),
+  authRole("Sales-agent"),
   async (req, res) => {
     try {
       const {
@@ -66,7 +67,23 @@ router.post(
           return res.status(400).json({ message: "Due date and dispatch date required" });
       }
 
-      const sale = new Sale(req.body);
+      const sale = new Sale({
+        saleType,
+        produceName,
+        produceType,
+        tonnage,
+        amountPaid,
+        buyerName,
+        salesAgent: salesAgentName,
+        date,
+        time,
+        NationalID: nationalId,
+        location,
+        contact: contacts,
+        amountDue,
+        dueDate,
+        dispatchDate
+      });
       await sale.save();
 
       res.status(201).json({ message: "Sale recorded successfully" });

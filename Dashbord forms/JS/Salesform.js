@@ -1,0 +1,308 @@
+document.addEventListener('DOMContentLoaded', () => {
+  // Elements
+  const cashForm = document.getElementById('cash-form');
+  const creditForm = document.getElementById('credit-form');
+
+  // Get logged-in user name from token
+  const token = getToken();
+  const decodedToken = token ? decodeToken(token) : null;
+  const userName = decodedToken ? decodedToken.name : '';
+
+  // Pre-fill sales agent names
+  if (userName) {
+    // For cash form
+    document.getElementById('cash-sales-agent').value = userName;
+    // For credit form - populate the sales agent field
+    document.getElementById('credit-sales-agent').value = userName;
+    document.getElementById('credit-sales-agent').readOnly = true;
+  }
+
+  // Attach submit handlers
+  cashForm.addEventListener('submit', handleCashSubmit);
+  creditForm.addEventListener('submit', handleCreditSubmit);
+
+  // Initialize view
+  showForm('cash');
+});
+
+const API_BASE = 'http://localhost:3000';
+
+function showForm(type) {
+  document.getElementById('cash-form').style.display = type === 'cash' ? 'grid' : 'none';
+  document.getElementById('credit-form').style.display = type === 'credit' ? 'grid' : 'none';
+}
+
+// --- Cash form product handling ---
+let products = [];
+
+function addProduct() {
+  const name = document.getElementById('product-name').value;
+  const category = document.getElementById('product-category').value;
+  const qty = Number(document.getElementById('quantity').value);
+  const price = Number(document.getElementById('unit-price').value);
+
+  if (!name || !qty || !price) {
+    alert('Please enter product name, quantity and price');
+    return;
+  }
+
+  const total = qty * price;
+  products.push({ name, category, qty, price, total });
+  console.log('Added product to array. Total products:', products.length);
+  console.log('Current products:', products);
+  renderProducts();
+  // clear inputs
+  document.getElementById('product-name').value = '';
+  document.getElementById('quantity').value = '';
+  document.getElementById('unit-price').value = '';
+}
+
+function renderProducts() {
+  const list = document.getElementById('product-list');
+  const totalsum = document.getElementById('grand-total');
+  list.innerHTML = '';
+  let grandtotal = 0;
+
+  products.forEach((p, index) => {
+    grandtotal += Number(p.total);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${p.name}</td>
+      <td>${p.category}</td>
+      <td>${p.qty}</td>
+      <td>${p.price.toFixed ? p.price.toFixed(2) : p.price}</td>
+      <td>${p.total.toFixed ? p.total.toFixed(2) : p.total}</td>
+      <td><button class="btn-remove" onclick="removeProduct(${index})">remove</button></td>
+    `;
+    list.appendChild(tr);
+  });
+
+  totalsum.textContent = grandtotal.toFixed(2);
+}
+
+function removeProduct(index) {
+  products.splice(index, 1);
+  renderProducts();
+}
+
+// --- Credit form product handling ---
+let creditProducts = [];
+
+function addProductCredit() {
+  // allow user to add the produce currently entered in the credit form
+  const name = document.getElementById('produce-name-credit').value;
+  const type = document.getElementById('produce-type-credit').value;
+  const qty = Number(document.getElementById('credit-tonnage').value);
+  const price = Number(document.getElementById('credit-unit-price').value);
+
+  if (!name || !qty || !price) {
+    alert('Please enter produce name, tonnage, and unit price');
+    return;
+  }
+
+  if (Number.isNaN(price)) return alert('Invalid price');
+
+  const total = qty * price;
+  creditProducts.push({ name, category: type || 'Produce', qty, price, total });
+  console.log('Added credit product to array. Total products:', creditProducts.length);
+  console.log('Current products:', creditProducts);
+  renderCreditProducts();
+  // Clear product inputs
+  document.getElementById('produce-name-credit').value = '';
+  document.getElementById('produce-type-credit').value = '';
+  document.getElementById('credit-tonnage').value = '';
+  document.getElementById('credit-unit-price').value = '';
+}
+
+function renderCreditProducts() {
+  const list = document.getElementById('credit-product-list');
+  const totalsum = document.getElementById('credit-grand-total');
+  list.innerHTML = '';
+  let grandtotal = 0;
+
+  creditProducts.forEach((p, index) => {
+    grandtotal += Number(p.total);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${p.name}</td>
+      <td>${p.category}</td>
+      <td>${p.qty}</td>
+      <td>${p.price.toFixed ? p.price.toFixed(2) : p.price}</td>
+      <td>${p.total.toFixed ? p.total.toFixed(2) : p.total}</td>
+      <td><button class="btn-remove" onclick="removeCreditProduct(${index})">remove</button></td>
+    `;
+    list.appendChild(tr);
+  });
+
+  totalsum.textContent = grandtotal.toFixed(2);
+}
+
+function removeCreditProduct(index) {
+  creditProducts.splice(index, 1);
+  renderCreditProducts();
+}
+
+// --- Helpers ---
+function getToken() {
+  return localStorage.getItem('token');
+}
+
+function decodeToken(token) {
+  try {
+    const payload = token.split('.')[1];
+    return JSON.parse(atob(payload));
+  } catch (e) {
+    return null;
+  }
+}
+
+async function postSale(payload) {
+  const token = getToken();
+  try {
+    const res = await fetch(`${API_BASE}/sales`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: 'Bearer ' + token } : {})
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || data.error || 'Request failed');
+    return { ok: true, data };
+  } catch (err) {
+    return { ok: false, error: err.message };
+  }
+}
+
+// --- Submit handlers ---
+async function handleCashSubmit(e) {
+  e.preventDefault();
+  if (products.length === 0) return alert('Add at least one product');
+
+  console.log('Starting cash sale submission. Total products:', products.length);
+  console.log('Products:', products);
+
+  const saleDate = document.getElementById('sale-date').value;
+  const saleId = document.getElementById('sale-id').value;
+  const buyer = document.getElementById('customer-name').value;
+  const phone = document.getElementById('customer-phone').value;
+  const salesAgent = document.getElementById('cash-sales-agent').value;
+
+  // Submit a separate sale record for each product
+  let successCount = 0;
+  let failCount = 0;
+
+  for (const product of products) {
+    console.log('Processing product:', product);
+    const payload = {
+      saleType: 'cash',
+      produceName: product.name,
+      produceType: product.category,
+      tonnage: Number(product.qty),
+      amountPaid: Number(product.total),
+      buyerName: buyer || null,
+      salesAgentName: salesAgent,
+      date: saleDate || new Date().toISOString().split('T')[0],
+      time: new Date().toLocaleTimeString(),
+      nationalId: null,
+      location: null,
+      contacts: phone || null,
+      amountDue: null,
+      dueDate: null,
+      dispatchDate: null,
+      saleId
+    };
+
+    const res = await postSale(payload);
+    console.log('Response for', product.name, ':', res);
+    if (res.ok) {
+      successCount++;
+    } else {
+      failCount++;
+    }
+  }
+
+  // Show result
+  if (failCount === 0) {
+    alert(`All ${successCount} products recorded successfully`);
+    products = [];
+    renderProducts();
+    document.getElementById('sale-id').value = '';
+    document.getElementById('sale-date').value = '';
+    document.getElementById('customer-name').value = '';
+    document.getElementById('customer-phone').value = '';
+  } else {
+    alert(`Recorded ${successCount} products, ${failCount} failed`);
+  }
+}
+
+async function handleCreditSubmit(e) {
+  e.preventDefault();
+
+  const buyer = document.getElementById('buyer-name').value;
+  const nationalId = document.getElementById('national-id').value;
+  const location = document.getElementById('credit-location').value;
+  const contacts = document.getElementById('credit-contacts').value;
+  const amountDue = Number(document.getElementById('amount-due').value);
+  const salesAgent = document.getElementById('credit-sales-agent').value || (decodeToken(getToken()) || {}).name;
+  const dueDate = document.getElementById('credit-due-date').value;
+  const dispatchDate = document.getElementById('dispatch-date').value;
+
+  if (!buyer || !nationalId) return alert('Buyer name and NIN required');
+  if (creditProducts.length === 0) return alert('Add at least one product');
+
+  console.log('Starting credit sale submission. Total products:', creditProducts.length);
+  console.log('Products:', creditProducts);
+
+  // Submit a separate sale record for each product
+  let successCount = 0;
+  let failCount = 0;
+
+  for (const product of creditProducts) {
+    console.log('Processing product:', product);
+    const payload = {
+      saleType: 'credit',
+      produceName: product.name,
+      produceType: product.category,
+      tonnage: Number(product.qty),
+      amountPaid: null,
+      buyerName: buyer,
+      salesAgentName: salesAgent || null,
+      date: new Date().toISOString().split('T')[0],
+      time: new Date().toLocaleTimeString(),
+      nationalId,
+      location,
+      contacts,
+      amountDue: Number(product.total),
+      dueDate,
+      dispatchDate
+    };
+
+    const res = await postSale(payload);
+    console.log('Response for', product.name, ':', res);
+    if (res.ok) {
+      successCount++;
+    } else {
+      failCount++;
+    }
+  }
+
+  // Show result
+  if (failCount === 0) {
+    alert(`All ${successCount} products recorded successfully`);
+    creditProducts = [];
+    renderCreditProducts();
+    document.getElementById('buyer-name').value = '';
+    document.getElementById('national-id').value = '';
+    document.getElementById('credit-location').value = '';
+    document.getElementById('credit-contacts').value = '';
+    document.getElementById('amount-due').value = '';
+    document.getElementById('credit-sales-agent').value = '';
+    document.getElementById('credit-due-date').value = '';
+    document.getElementById('dispatch-date').value = '';
+  } else {
+    alert(`Recorded ${successCount} products, ${failCount} failed`);
+  }
+}
