@@ -2,13 +2,14 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const authMiddleware = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
 // creation of new users.
 router.post("/register", async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, branch, phone, bio } = req.body;
 
     // Check if user exists
     const existingUser = await User.findOne({ email });
@@ -24,7 +25,10 @@ router.post("/register", async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role
+      role,
+      branch,
+      phone: phone || "",
+      bio: bio || ""
     });
 
     await newUser.save();
@@ -69,4 +73,18 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+// Get user details by ID
+router.get("/:id", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;

@@ -25,8 +25,15 @@ const userSchema = new mongoose.Schema({
   },
   branch: {
     type: String,
-    enum: ["Matugga","Maganjo"],
-  
+    enum: ["Matugga","Maganjo"]
+  },
+  phone: {
+    type: String,
+    default: ""
+  },
+  bio: {
+    type: String,
+    default: ""
   }
 });
 
