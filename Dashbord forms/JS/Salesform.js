@@ -93,28 +93,42 @@ let creditProducts = [];
 
 function addProductCredit() {
   // allow user to add the produce currently entered in the credit form
-  const name = document.getElementById('produce-name-credit').value;
-  const type = document.getElementById('produce-type-credit').value;
-  const qty = Number(document.getElementById('credit-tonnage').value);
-  const price = Number(document.getElementById('credit-unit-price').value);
+  const nameInput = document.getElementById('produce-name-credit');
+  const typeInput = document.getElementById('produce-type-credit');
+  const qtyInput = document.getElementById('credit-tonnage');
+  const priceInput = document.getElementById('credit-unit-price');
+
+  const name = nameInput.value.trim();
+  const type = typeInput.value.trim();
+  const qty = Number(qtyInput.value);
+  const price = Number(priceInput.value);
+
+  console.log('AddProductCredit called:', { name, type, qty, price });
 
   if (!name || !qty || !price) {
     alert('Please enter produce name, tonnage, and unit price');
     return;
   }
 
-  if (Number.isNaN(price)) return alert('Invalid price');
+  if (Number.isNaN(price) || Number.isNaN(qty)) {
+    alert('Invalid tonnage or price');
+    return;
+  }
 
   const total = qty * price;
   creditProducts.push({ name, category: type || 'Produce', qty, price, total });
   console.log('Added credit product to array. Total products:', creditProducts.length);
   console.log('Current products:', creditProducts);
+  
   renderCreditProducts();
+  
   // Clear product inputs
-  document.getElementById('produce-name-credit').value = '';
-  document.getElementById('produce-type-credit').value = '';
-  document.getElementById('credit-tonnage').value = '';
-  document.getElementById('credit-unit-price').value = '';
+  nameInput.value = '';
+  typeInput.value = '';
+  qtyInput.value = '';
+  priceInput.value = '';
+  
+  console.log('Cleared inputs. Ready for next product.');
 }
 
 function renderCreditProducts() {
