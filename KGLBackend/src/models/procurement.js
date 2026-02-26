@@ -11,7 +11,8 @@ const procurementSchema = new mongoose.Schema({
   branch: { type: String, enum: ["Maganjo", "Matugga"] },
   contact: { type: String, required: true },
   sellingPrice: {type: Number,required:true},
-  recordedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
+  recordedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  recordedByName: { type: String, required: true }
 });
 
 module.exports = mongoose.model("Procurement", procurementSchema);

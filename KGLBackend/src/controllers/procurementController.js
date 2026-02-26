@@ -74,7 +74,8 @@ exports.createProcurement = async (req, res) => {
       contact: supplier_contact,
       sellingPrice: finalTotal,
       branch: branch,
-      recordedBy: req.user ? req.user.id : null
+      recordedBy: req.user ? req.user.id : null,
+      recordedByName: req.user ? req.user.name : ""
     });
 
     // Save to database
