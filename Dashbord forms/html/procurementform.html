@@ -62,8 +62,22 @@
             </div>
 
             <div class="form-group">
-                <label for="total-amount">Total Amount</label>
-                <input class="input" type="text" id="total-amount" name="total_amount" placeholder="Auto / Manual">
+                <label for="produce-time">Time of produce</label>
+                <input class="input" type="time" id="produce-time" name="produce_time" required>
+            </div>
+
+            <div class="form-group">
+                <label for="branch">Branch</label>
+                <select class="input" id="branch" name="branch" required>
+                    <option value="" disabled selected>Select branch</option>
+                    <option value="Maganjo">Maganjo</option>
+                    <option value="Matugga">Matugga</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="selling-price">Selling Price (UgX)</label>
+                <input class="input" type="number" id="selling-price" name="selling_price" step="0.01" placeholder="Auto / Manual">
             </div>
 
             <div class="form-group">

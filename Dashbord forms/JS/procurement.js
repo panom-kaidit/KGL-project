@@ -6,12 +6,15 @@ let procurementForm;
 let supplierNameInput;
 let supplierContactInput;
 let purchaseDateInput;
+let produceTimeInput;
 let invoiceNumberInput;
 let productNameInput;
 let productCategoryInput;
 let quantityInput;
 let unitPriceInput;
-let totalAmountInput;
+let sellingPriceInput;
+let branchInput;
+let totalAmountInput; // legacy alias, will point to sellingPriceInput
 
 // Initialize form elements when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
@@ -21,12 +24,16 @@ document.addEventListener('DOMContentLoaded', function() {
   supplierNameInput = document.getElementById('supplier-name');
   supplierContactInput = document.getElementById('supplier-contact');
   purchaseDateInput = document.getElementById('purchase-date');
+  produceTimeInput = document.getElementById('produce-time');
   invoiceNumberInput = document.getElementById('invoice-number');
   productNameInput = document.getElementById('product-name');
   productCategoryInput = document.getElementById('product-category');
   quantityInput = document.getElementById('quantity');
   unitPriceInput = document.getElementById('unit-price');
-  totalAmountInput = document.getElementById('total-amount');
+  sellingPriceInput = document.getElementById('selling-price');
+  branchInput = document.getElementById('branch');
+  // backwards compatibility alias
+  totalAmountInput = sellingPriceInput;
 
   console.log('Form found:', !!procurementForm);
   console.log('All form inputs found:', {
@@ -94,19 +101,57 @@ async function handleFormSubmit(e) {
     console.log('Payment method:', paymentMethod);
     console.log('Payment status:', paymentStatus);
 
-    // Validate required fields
-    if (!supplierNameInput.value || !supplierContactInput.value || !purchaseDateInput.value ||
-        !invoiceNumberInput.value || !productNameInput.value || !quantityInput.value ||
-        !unitPriceInput.value || !paymentMethod || !paymentStatus) {
-      showAlert('Please fill in all required fields', 'error');
-      console.warn('Missing required fields');
+    // Validate required fields with rules
+    const namePattern = /^[A-Za-z0-9 ]+$/;
+    const typePattern = /^[A-Za-z ]{2,}$/;
+    const dealerPattern = /^[A-Za-z0-9 ]{2,}$/;
+    const phonePattern = /^[0-9+]{10,15}$/;
+
+    if (!supplierNameInput.value || !namePattern.test(supplierNameInput.value)) {
+      showAlert('Supplier name must be alphanumeric and at least 1 character', 'error');
+      return;
+    }
+    if (!supplierContactInput.value || !phonePattern.test(supplierContactInput.value)) {
+      showAlert('Please provide a valid contact phone number', 'error');
+      return;
+    }
+    if (!purchaseDateInput.value) {
+      showAlert('Purchase date is required', 'error');
+      return;
+    }
+    if (!produceTimeInput.value) {
+      showAlert('Produce time is required', 'error');
+      return;
+    }
+    if (!invoiceNumberInput.value) {
+      showAlert('Invoice number is required', 'error');
+      return;
+    }
+    if (!productNameInput.value || !namePattern.test(productNameInput.value)) {
+      showAlert('Product/produce name must be alphanumeric', 'error');
+      return;
+    }
+    if (!productCategoryInput.value || !typePattern.test(productCategoryInput.value)) {
+      showAlert('Produce type must be alphabetic and at least 2 characters', 'error');
+      return;
+    }
+    if (!quantityInput.value || isNaN(quantityInput.value) || parseInt(quantityInput.value) < 100) {
+      showAlert('Tonnage must be numeric and at least 3 digits (>=100)', 'error');
+      return;
+    }
+    if (!unitPriceInput.value || isNaN(unitPriceInput.value) || parseFloat(unitPriceInput.value) < 10000) {
+      showAlert('Cost must be numeric and at least 5 digits (>=10000)', 'error');
+      return;
+    }
+    if (!branchInput.value) {
+      showAlert('Please select a branch', 'error');
       return;
     }
 
-    // Calculate total amount if empty
-    let totalAmount = totalAmountInput.value;
-    if (!totalAmount || totalAmount === 0) {
-      totalAmount = parseFloat(quantityInput.value) * parseFloat(unitPriceInput.value);
+    // Calculate selling price if empty
+    let sellingPrice = sellingPriceInput.value;
+    if (!sellingPrice || sellingPrice === 0) {
+      sellingPrice = parseFloat(quantityInput.value) * parseFloat(unitPriceInput.value);
     }
 
     // Prepare form data
@@ -114,12 +159,14 @@ async function handleFormSubmit(e) {
       supplier_name: supplierNameInput.value,
       supplier_contact: supplierContactInput.value,
       purchase_date: purchaseDateInput.value,
+      produce_time: produceTimeInput.value,
       invoice_number: invoiceNumberInput.value,
       product_name: productNameInput.value,
       product_category: productCategoryInput.value || '',
       quantity: parseFloat(quantityInput.value),
       unit_price: parseFloat(unitPriceInput.value),
-      total_amount: totalAmount,
+      selling_price: parseFloat(sellingPrice),
+      branch: branchInput.value,
       payment_method: paymentMethod,
       payment_status: paymentStatus
     };
@@ -252,7 +299,7 @@ function showAlert(message, type = 'info') {
 // Fetch and display procurement records (optional - for viewing submitted records)
 async function fetchProcurementRecords() {
   try {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('token');
 
     if (!token) {
       console.log('No auth token found');
