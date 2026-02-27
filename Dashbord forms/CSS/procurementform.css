@@ -165,6 +165,109 @@ body {
     }
 }
 
+/* ===== SEARCH & SORT CONTROLS ===== */
+
+.controls-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.search-wrapper {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+    font-size: 13px;
+    pointer-events: none;
+}
+
+.search-input {
+    width: 100%;
+    padding: 9px 34px 9px 34px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search-input:focus {
+    border-color: #1B5E20;
+}
+
+.clear-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 2px 4px;
+    display: none;
+}
+
+.clear-btn:hover {
+    color: #555;
+}
+
+.sort-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.sort-label {
+    font-size: 13px;
+    color: #666;
+    white-space: nowrap;
+}
+
+.sort-btn {
+    padding: 8px 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fff;
+    color: #555;
+    font-size: 13px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s;
+}
+
+.sort-btn:hover {
+    border-color: #1B5E20;
+    color: #1B5E20;
+}
+
+.sort-btn.active {
+    background: #1B5E20;
+    color: #fff;
+    border-color: #1B5E20;
+}
+
+.result-count {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 8px;
+    min-height: 18px;
+}
+
 /* ===== PROCUREMENT TABLE STYLES ===== */
 
 /* Main content area */

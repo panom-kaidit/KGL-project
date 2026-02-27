@@ -7,6 +7,18 @@ const router = express.Router();
 
 // GET /sales/dashboard — agent summary (must come before any /:id route)
 router.get("/dashboard", authMiddleware, getAgentDashboardSummary);
+
+// GET /sales/history — all sales recorded by the logged-in agent
+router.get("/history", authMiddleware, async (req, res) => {
+  try {
+    const sales = await Sale.find({ recordedBy: req.user.id })
+      .sort({ date: -1, time: -1 })
+      .lean();
+    res.json({ data: sales });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 router.post(
   "/",
   authMiddleware,

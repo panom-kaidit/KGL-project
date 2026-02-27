@@ -94,6 +94,32 @@
             </a>
         </div>
 
+        <!-- Search and Sort Controls -->
+        <div class="controls-bar">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="Search by produce, type, dealer, contact…"
+                >
+                <button type="button" id="clearSearch" class="clear-btn" aria-label="Clear search">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="sort-wrapper">
+                <span class="sort-label">Sort by Date:</span>
+                <button type="button" id="sortDesc" class="sort-btn active">
+                    <i class="fas fa-arrow-down"></i> Newest
+                </button>
+                <button type="button" id="sortAsc" class="sort-btn">
+                    <i class="fas fa-arrow-up"></i> Oldest
+                </button>
+            </div>
+        </div>
+        <p id="resultCount" class="result-count"></p>
+
         <!-- Procurement Table -->
         <div class="table-container">
             <table class="procurement-table">

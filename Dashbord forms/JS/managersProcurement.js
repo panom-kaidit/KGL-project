@@ -1,5 +1,7 @@
-// Base API URL
 const API_BASE_URL = 'http://localhost:3000';
+
+let allProcurements = [];
+let sortDirection = 'desc';
 
 function decodeToken(token) {
   try {
@@ -9,7 +11,6 @@ function decodeToken(token) {
   }
 }
 
-// Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('token');
   if (!token) {
@@ -17,13 +18,85 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // Load procurements for manager's branch
+  setupControls();
   loadProcurements();
 });
 
-/**
- * Load procurements filtered by manager's branch
- */
+function setupControls() {
+  const searchInput = document.getElementById('searchInput');
+  const clearBtn = document.getElementById('clearSearch');
+  const sortDescBtn = document.getElementById('sortDesc');
+  const sortAscBtn = document.getElementById('sortAsc');
+
+  searchInput.addEventListener('input', () => {
+    clearBtn.style.display = searchInput.value ? 'block' : 'none';
+    applyFilters();
+  });
+
+  clearBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    clearBtn.style.display = 'none';
+    applyFilters();
+  });
+
+  sortDescBtn.addEventListener('click', () => {
+    sortDirection = 'desc';
+    sortDescBtn.classList.add('active');
+    sortAscBtn.classList.remove('active');
+    applyFilters();
+  });
+
+  sortAscBtn.addEventListener('click', () => {
+    sortDirection = 'asc';
+    sortAscBtn.classList.add('active');
+    sortDescBtn.classList.remove('active');
+    applyFilters();
+  });
+}
+
+function applyFilters() {
+  const query = document.getElementById('searchInput').value.trim();
+
+  let pattern;
+  try {
+    pattern = new RegExp(query, 'i');
+  } catch {
+    pattern = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+  }
+
+  const filtered = query
+    ? allProcurements.filter(proc => {
+        const haystack = [
+          proc.produceName,
+          proc.produceType,
+          proc.dealerName,
+          proc.contact,
+          proc.branch,
+          proc.recordedByName,
+          proc.date,
+          proc.time
+        ].join(' ');
+        return pattern.test(haystack);
+      })
+    : [...allProcurements];
+
+  filtered.sort((a, b) => {
+    const diff = new Date(a.date) - new Date(b.date);
+    return sortDirection === 'desc' ? -diff : diff;
+  });
+
+  updateResultCount(filtered.length, allProcurements.length);
+  displayProcurements(filtered);
+}
+
+function updateResultCount(shown, total) {
+  const el = document.getElementById('resultCount');
+  if (!el) return;
+  el.textContent = shown === total
+    ? `${total} record${total !== 1 ? 's' : ''}`
+    : `Showing ${shown} of ${total} records`;
+}
+
 async function loadProcurements() {
   try {
     const token = localStorage.getItem('token');
@@ -35,7 +108,6 @@ async function loadProcurements() {
       return;
     }
 
-    // Fetch all procurements
     const response = await fetch(`${API_BASE_URL}/procurement`, {
       method: 'GET',
       headers: {
@@ -44,33 +116,27 @@ async function loadProcurements() {
       }
     });
 
+    if (response.status === 401 || response.status === 403) {
+      window.location.href = '/loginform/html/login.html';
+      return;
+    }
+
     if (!response.ok) {
       throw new Error(`Failed to fetch procurements: ${response.status}`);
     }
 
     const result = await response.json();
-    console.log('All procurements:', result.data);
+    allProcurements = result.data.filter(proc => proc.branch === managerBranch);
 
-    // Filter procurements by manager's branch
-    const filteredProcurements = result.data.filter(proc => proc.branch === managerBranch);
-    console.log(`Filtered procurements for ${managerBranch}:`, filteredProcurements);
-
-    // Display in table
-    displayProcurements(filteredProcurements);
+    applyFilters();
 
   } catch (error) {
     console.error('Error loading procurements:', error);
-    showAlert(error.message || 'Error loading procurements', 'error');
-    
-    // Show no results message
-    document.getElementById('procurementTableBody').innerHTML = 
+    document.getElementById('procurementTableBody').innerHTML =
       '<tr class="error-row"><td colspan="12" class="text-center">Error loading procurements. Please try again.</td></tr>';
   }
 }
 
-/**
- * Display procurements in table
- */
 function displayProcurements(procurements) {
   const tableBody = document.getElementById('procurementTableBody');
   const noResultsMessage = document.getElementById('noResultsMessage');
@@ -81,16 +147,10 @@ function displayProcurements(procurements) {
     return;
   }
 
-  // Hide no results message
   noResultsMessage.style.display = 'none';
 
-  // Sort by date descending (most recent first)
-  procurements.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-  // Build table rows
   tableBody.innerHTML = procurements.map(proc => {
     const statusBadge = getStatusBadge(proc.date);
-    
     return `
       <tr class="procurement-row" data-id="${proc._id}">
         <td>${formatDate(proc.date)}</td>
@@ -108,13 +168,8 @@ function displayProcurements(procurements) {
       </tr>
     `;
   }).join('');
-
-  console.log(`Displayed ${procurements.length} procurements`);
 }
 
-/**
- * Get status badge based on date
- */
 function getStatusBadge(dateString) {
   const procDate = new Date(dateString);
   const today = new Date();
@@ -130,9 +185,6 @@ function getStatusBadge(dateString) {
   }
 }
 
-/**
- * Format date string
- */
 function formatDate(dateString) {
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', {
@@ -142,16 +194,10 @@ function formatDate(dateString) {
   });
 }
 
-/**
- * Format number with thousands separator
- */
 function formatNumber(num) {
   return Math.round(num).toLocaleString('en-US');
 }
 
-/**
- * Format currency
- */
 function formatCurrency(num) {
   return num.toLocaleString('en-US', {
     style: 'currency',
@@ -161,9 +207,6 @@ function formatCurrency(num) {
   }).replace('UGX', '').trim();
 }
 
-/**
- * Show alert notification
- */
 function showAlert(message, type = 'info') {
   const alertContainer = document.createElement('div');
   alertContainer.style.cssText = `
@@ -174,7 +217,6 @@ function showAlert(message, type = 'info') {
     border-radius: 4px;
     font-weight: 500;
     z-index: 9999;
-    animation: slideIn 0.3s ease-in-out;
     max-width: 400px;
   `;
 
@@ -189,38 +231,7 @@ function showAlert(message, type = 'info') {
   alertContainer.style.color = '#fff';
   alertContainer.textContent = message;
 
-  const style = document.createElement('style');
-  if (!document.querySelector('style[data-alert]')) {
-    style.setAttribute('data-alert', 'true');
-    style.textContent = `
-      @keyframes slideIn {
-        from {
-          transform: translateX(400px);
-          opacity: 0;
-        }
-        to {
-          transform: translateX(0);
-          opacity: 1;
-        }
-      }
-      @keyframes slideOut {
-        from {
-          transform: translateX(0);
-          opacity: 1;
-        }
-        to {
-          transform: translateX(400px);
-          opacity: 0;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-  }
-
   document.body.appendChild(alertContainer);
 
-  setTimeout(() => {
-    alertContainer.style.animation = 'slideOut 0.3s ease-in-out';
-    setTimeout(() => alertContainer.remove(), 300);
-  }, 3000);
+  setTimeout(() => alertContainer.remove(), 3000);
 }
