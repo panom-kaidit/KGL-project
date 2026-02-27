@@ -132,53 +132,7 @@
     </main>
 
     <!-- Statistics Script -->
-    <script>
-        // Monthly Sales Chart (Bar Chart)
-        const ctx1 = document.getElementById('monthlySalesChart').getContext('2d');
-        new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                datasets: [{
-                    label: 'Sales (UGX)',
-                    data: [1200000, 1900000, 3000000, 5000000],
-                    backgroundColor: '#1B5E20'
-                }]
-            },
-            options: { responsive: true }
-        });
-
-        // Customer Activity Chart (Pie Chart)
-        const ctx2 = document.getElementById('customerActivityChart').getContext('2d');
-        new Chart(ctx2, {
-            type: 'pie',
-            data: {
-                labels: ['New', 'Returning', 'Inactive'],
-                datasets: [{
-                    data: [30, 50, 20],
-                    backgroundColor: ['#43a047', '#1B5E20', '#aa6900']
-                }]
-            },
-            options: { responsive: true }
-        });
-
-        // Yearly Overview (Line Chart)
-        const ctx3 = document.getElementById('yearlyOverviewChart').getContext('2d');
-        new Chart(ctx3, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'Total Revenue',
-                    data: [10, 15, 12, 20, 25, 30, 35, 32, 40, 45, 50, 60], // In millions
-                    borderColor: '#1B5E20',
-                    fill: false,
-                    tension: 0.1
-                }]
-            },
-            options: { responsive: true }
-        });
-    </script>
+    <script src="/Dashbord forms/JS/statistics.js"></script>
     <script src="/Dashbord forms/JS/logout.js"></script>
 
 </body>

@@ -27,11 +27,13 @@ app.use(express.json());
 const procurementRoutes = require(path.join(__dirname,"src","routes","procurementRoutes"));
 const salesRoutes = require(path.join(__dirname,"src","routes","salesRoutes"));
 const userRoutes = require(path.join(__dirname,"src","routes","userRoutes"));
+const statisticsRoutes = require(path.join(__dirname,"src","routes","statisticsRoutes"));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/procurement", procurementRoutes);
 app.use("/sales", salesRoutes);
 app.use("/users", userRoutes);
+app.use("/api/manager", statisticsRoutes);
 // server listening  on the specified port
 app.listen(port,(err)=>{
     if(err){

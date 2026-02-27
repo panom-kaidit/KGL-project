@@ -1,14 +1,18 @@
 // Base API URL
 const API_BASE_URL = 'http://localhost:3000';
 
+function decodeToken(token) {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch {
+    return null;
+  }
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('Managers Procurement page loaded');
-  
-  // Check if user is logged in
   const token = localStorage.getItem('token');
   if (!token) {
-    showAlert('Please login first', 'error');
     window.location.href = '/loginform/html/login.html';
     return;
   }
@@ -23,12 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadProcurements() {
   try {
     const token = localStorage.getItem('token');
-    const managerBranch = localStorage.getItem('userBranch');
-
-    console.log('Loading procurements for branch:', managerBranch);
+    const decoded = decodeToken(token);
+    const managerBranch = decoded ? decoded.branch : '';
 
     if (!managerBranch) {
-      showAlert('Branch information not found. Please login again.', 'warning');
+      showAlert('No branch assigned to your account. Contact admin.', 'warning');
       return;
     }
 
