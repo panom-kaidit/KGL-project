@@ -222,6 +222,50 @@
     min-height: 18px;
 }
 
+/* Sale type filter bar */
+.type-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.type-btn {
+    padding: 7px 16px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    background: #fff;
+    color: #555;
+    font-size: 13px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s;
+}
+
+.type-btn:hover {
+    border-color: #1B5E20;
+    color: #1B5E20;
+}
+
+.type-btn.active {
+    background: #1B5E20;
+    color: #fff;
+    border-color: #1B5E20;
+}
+
+#filterCash.active {
+    background: #2e7d32;
+    border-color: #2e7d32;
+}
+
+#filterCredit.active {
+    background: #f57c00;
+    border-color: #f57c00;
+}
+
 /* Sales table */
 .table-container {
     background: white;

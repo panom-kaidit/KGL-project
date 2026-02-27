@@ -128,7 +128,7 @@
               type="text"
               id="salesSearchInput"
               class="search-input"
-              placeholder="Search by produce, buyer, contact, type…"
+              placeholder="Search by produce, buyer, agent, contact…"
             >
             <button type="button" id="clearSalesSearch" class="clear-btn" aria-label="Clear search">
               <i class="fas fa-times"></i>
@@ -144,6 +144,19 @@
             </button>
           </div>
         </div>
+
+        <!-- Sale Type Filter -->
+        <div class="type-filter-bar">
+          <span class="sort-label">Sale Type:</span>
+          <button type="button" id="filterAll" class="type-btn active">All</button>
+          <button type="button" id="filterCash" class="type-btn">
+            <i class="fas fa-money-bill-wave"></i> Cash
+          </button>
+          <button type="button" id="filterCredit" class="type-btn">
+            <i class="fas fa-credit-card"></i> Credit
+          </button>
+        </div>
+
         <p id="salesResultCount" class="result-count"></p>
 
         <!-- Sales Table -->
@@ -160,12 +173,13 @@
                 <th>Amount (UgX)</th>
                 <th>Buyer</th>
                 <th>Contact</th>
+                <th>Agent</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody id="salesTableBody">
               <tr class="loading-row">
-                <td colspan="10" class="text-center">Loading sales…</td>
+                <td colspan="11" class="text-center">Loading sales…</td>
               </tr>
             </tbody>
           </table>
@@ -174,7 +188,7 @@
         <div id="salesNoResults" class="no-results no-results--hidden">
           <i class="fas fa-inbox"></i>
           <h3>No sales found</h3>
-          <p>No sales records match your search.</p>
+          <p>No sales records match your search or filter.</p>
         </div>
       </section>
 

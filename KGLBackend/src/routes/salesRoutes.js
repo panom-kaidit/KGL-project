@@ -2,6 +2,7 @@ const express = require("express");
 const authMiddleware = require("../middlewares/authMiddleware");
 const authRole = require("../middlewares/rbaMiddleware");
 const Sale = require("../models/sales");
+const User = require("../models/User");
 const { getAgentDashboardSummary } = require("../controllers/salesController");
 const router = express.Router();
 
@@ -14,6 +15,29 @@ router.get("/history", authMiddleware, async (req, res) => {
     const sales = await Sale.find({ recordedBy: req.user.id })
       .sort({ date: -1, time: -1 })
       .lean();
+    res.json({ data: sales });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /sales/branch — all sales by every agent in the same branch
+router.get("/branch", authMiddleware, async (req, res) => {
+  try {
+    const branch = req.user.branch;
+    if (!branch) {
+      return res.status(400).json({ message: "No branch assigned to your account" });
+    }
+
+    // Find all user IDs belonging to this branch
+    const agents = await User.find({ branch }).select("_id").lean();
+    const agentIds = agents.map(a => a._id);
+
+    const sales = await Sale.find({ recordedBy: { $in: agentIds } })
+      .populate("recordedBy", "name")
+      .sort({ date: -1, time: -1 })
+      .lean();
+
     res.json({ data: sales });
   } catch (error) {
     res.status(500).json({ error: error.message });
