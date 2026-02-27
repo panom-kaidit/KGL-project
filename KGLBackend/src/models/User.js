@@ -25,13 +25,17 @@ const userSchema = new mongoose.Schema({
   },
   branch: {
     type: String,
-    enum: ["Matugga","Maganjo"]
+    enum: ["Maganjo", "Matugga"]
   },
   phone: {
     type: String,
     default: ""
   },
   bio: {
+    type: String,
+    default: ""
+  },
+  profilePicture: {
     type: String,
     default: ""
   }

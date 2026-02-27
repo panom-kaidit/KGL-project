@@ -250,12 +250,10 @@ async function handleCashSubmit(e) {
   // Show result
   if (failCount === 0) {
     alert(`All ${successCount} products recorded successfully`);
-    products = [];
-    renderProducts();
-    document.getElementById('sale-id').value = '';
-    document.getElementById('sale-date').value = '';
-    document.getElementById('customer-name').value = '';
-    document.getElementById('customer-phone').value = '';
+    const role = decodedToken ? decodedToken.role : '';
+    window.location.href = role === 'Manager'
+      ? '/Dashbord forms/html/managergosell.html'
+      : '/Dashbord forms/html/goSell.html';
   } else {
     alert(`Recorded ${successCount} products, ${failCount} failed`);
   }
@@ -319,16 +317,10 @@ async function handleCreditSubmit(e) {
   // Show result
   if (failCount === 0) {
     alert(`All ${successCount} products recorded successfully`);
-    creditProducts = [];
-    renderCreditProducts();
-    document.getElementById('buyer-name').value = '';
-    document.getElementById('national-id').value = '';
-    document.getElementById('credit-location').value = '';
-    document.getElementById('credit-contacts').value = '';
-    document.getElementById('amount-due').value = '';
-    document.getElementById('credit-sales-agent').value = '';
-    document.getElementById('credit-due-date').value = '';
-    document.getElementById('dispatch-date').value = '';
+    const role = decodedToken ? decodedToken.role : '';
+    window.location.href = role === 'Manager'
+      ? '/Dashbord forms/html/managergosell.html'
+      : '/Dashbord forms/html/goSell.html';
   } else {
     alert(`Recorded ${successCount} products, ${failCount} failed`);
   }

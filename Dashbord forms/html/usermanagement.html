@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <!-- font awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/Dashbord forms/CSS/managersDashboard.css">
+    <link rel="stylesheet" href="/Dashbord forms/CSS/procurementform.css">
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="/images/logo/karibu logo.png" alt="Karibu Logo" />
+        </div>
+
+        <ul class="nav_menu">
+            <li>
+                <a href="/Dashbord forms/html/managersDashboard.html">
+                    <i class="fas fa-home"></i>
+                    <span>Overview</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Dashbord forms/html/managergosell.html" >
+                    <i class="fas fa-store"></i>
+                    <span>Go Sell</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Dashbord forms/html/managersProcurement.html">
+                    <i class="fas fa-cart-plus"></i>
+                    <span>Procurement</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Dashbord forms/html/usermanagement.html" class="active">
+                    <i class="fas fa-users"></i>
+                    <span>User Management</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Dashbord forms/html/statistics.html" ><i class="fas fa-chart-bar"></i><span>Statistics</span>
+                </a >
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fas fa-tags"></i>
+                    <span>Pricing</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Dashbord forms/html/managersProfile.html">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <main>
+        <div class="header">
+            <h1>User Management</h1>
+            <p>Add new users to the system</p>
+        </div>
+
+        <div class="user-form-container">
+            <form id="userForm" class="form-box">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" class="input" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" class="input" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" class="input" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select id="role" name="role" class="input" required>
+                        <option value="" disabled selected>Select role</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Sales-agent">Sales-agent</option>
+                        <option value="Director">Director</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="branch">Branch</label>
+                    <select id="branch" name="branch" class="input">
+                        <option value="" disabled selected>Select branch (if applicable)</option>
+                        <option value="Maganjo">Maganjo</option>
+                        <option value="Matugga">Matugga</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" name="phone" class="input" />
+                </div>
+
+                <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <textarea id="bio" name="bio" class="input" rows="3"></textarea>
+                </div>
+
+                <div class="submit-btn">
+                    <button type="submit" class="btn btn-primary">Register User</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="userMessage" class="no-results" style="display:none;"></div>
+    </main>
+
+    <script src="/Dashbord forms/JS/usermanagement.js"></script>
+</body>
+</html>

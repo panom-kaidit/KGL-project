@@ -164,3 +164,232 @@ body {
         margin: 0 auto;
     }
 }
+
+/* ===== PROCUREMENT TABLE STYLES ===== */
+
+/* Main content area */
+main {
+    padding: 30px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header {
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    color: #1B5E20;
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.header p {
+    color: #777;
+    font-size: 14px;
+}
+
+/* Action bar */
+.action-bar {
+    margin-bottom: 30px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: #1B5E20;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #145a1a;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(27, 94, 32, 0.3);
+}
+
+.btn i {
+    margin-right: 8px;
+}
+
+/* Table container */
+.table-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    margin-bottom: 30px;
+}
+
+.procurement-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.procurement-table thead {
+    background: #1B5E20;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.procurement-table thead th {
+    padding: 15px 12px;
+    text-align: left;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.procurement-table tbody tr {
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s ease;
+}
+
+.procurement-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.procurement-table tbody td {
+    padding: 12px 12px;
+    color: #333;
+}
+
+.procurement-table tbody tr.loading-row td,
+.procurement-table tbody tr.error-row td {
+    text-align: center;
+    color: #999;
+    padding: 30px 12px;
+}
+
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.badge.branch {
+    background: #e8f5e9;
+    color: #1B5E20;
+}
+
+.badge.status-today {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.badge.status-upcoming {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.badge.status-past {
+    background: #fce4ec;
+    color: #c2185b;
+}
+
+/* Text utilities */
+.text-center {
+    text-align: center;
+}
+
+/* No results message */
+.no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.no-results i {
+    font-size: 48px;
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+.no-results h3 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.no-results p {
+    color: #999;
+    font-size: 14px;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .procurement-table {
+        font-size: 13px;
+    }
+
+    .procurement-table thead th,
+    .procurement-table tbody td {
+        padding: 10px 8px;
+    }
+
+    main {
+        padding: 20px 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Hide less important columns on mobile */
+    .procurement-table thead th:nth-child(6),
+    .procurement-table thead th:nth-child(7),
+    .procurement-table tbody td:nth-child(6),
+    .procurement-table tbody td:nth-child(7) {
+        display: none;
+    }
+
+    .procurement-table {
+        font-size: 12px;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        font-size: 13px;
+    }
+
+    .header h1 {
+        font-size: 22px;
+    }
+}
+
+/* user management message styles */
+.no-results.success {
+    background: #e8f5e9;
+    color: #1B5E20;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.no-results.error {
+    background: #ffebee;
+    color: #c62828;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    justify-content: center;
+}

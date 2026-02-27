@@ -32,7 +32,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/procurement", procurementRoutes);
 app.use("/sales", salesRoutes);
 app.use("/users", userRoutes);
-// server listening
+// server listening  on the specified port
 app.listen(port,(err)=>{
     if(err){
         console.log(err)

@@ -55,7 +55,17 @@
 
   <div class="profile--container">
     <div class="profile--card">
-      <img src="/images/logo/karibu icon.png" alt="Seller Photo">
+
+      <!-- Profile picture with change overlay -->
+      <div class="profile--avatar-wrapper" title="Click to change photo">
+        <img src="/images/logo/karibu icon.png" alt="Seller Photo">
+        <div class="avatar--overlay">
+          <i class="fas fa-camera"></i>
+        </div>
+      </div>
+      <label for="profile-pic-input" class="profile-pic-input--hidden">
+        <input type="file" id="profile-pic-input" accept="image/*" title="Change profile picture">
+      </label>
 
       <h3>Seller Name</h3>
       <p class="role">Sales Representative</p>
@@ -68,10 +78,14 @@
 
       <div class="profile--bio">
         <h4>Bio</h4>
-        <p>
-          This seller has been working with Karibu for over 2 years and is
-          responsible for daily sales and customer service.
-        </p>
+        <p>This seller has been working with Karibu for over 2 years and is responsible for daily sales and customer service.</p>
+        <button type="button" class="bio--edit-btn" id="bio-edit-btn"><i class="fas fa-pencil-alt"></i> Edit</button>
+
+        <div id="bio-edit-controls" class="bio--edit-controls--hidden">
+          <textarea class="bio--textarea" id="bio-textarea" placeholder="Write something about yourself..."></textarea>
+          <button type="button" class="bio--save-btn" id="bio-save-btn">Save</button>
+          <button type="button" class="bio--cancel-btn" id="bio-cancel-btn">Cancel</button>
+        </div>
       </div>
     </div>
   </div>

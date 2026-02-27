@@ -74,6 +74,31 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// Update user bio and profile picture
+router.put("/:id", authMiddleware, async (req, res) => {
+  try {
+    const { bio, profilePicture } = req.body;
+
+    const updateFields = {};
+    if (bio !== undefined) updateFields.bio = bio;
+    if (profilePicture !== undefined) updateFields.profilePicture = profilePicture;
+
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { $set: updateFields },
+      { new: true }
+    ).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Get user details by ID
 router.get("/:id", authMiddleware, async (req, res) => {
   try {
