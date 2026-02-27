@@ -61,7 +61,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   setupProfilePictureUpload();
   setupBioEdit();
-  setupLogout();
 });
 
 function displayUserProfile(user) {
@@ -205,14 +204,3 @@ function showSaveMessage(msg) {
   setTimeout(() => { msgEl.textContent = ''; }, 3000);
 }
 
-function setupLogout() {
-  const logoutLink = document.querySelector('a i.fa-sign-out-alt');
-  if (logoutLink) {
-    logoutLink.parentElement.addEventListener('click', (e) => {
-      e.preventDefault();
-      localStorage.removeItem('token');
-      localStorage.removeItem('role');
-      window.location.href = '/loginform/html/login.html';
-    });
-  }
-}

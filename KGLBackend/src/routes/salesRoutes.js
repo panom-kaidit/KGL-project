@@ -2,7 +2,11 @@ const express = require("express");
 const authMiddleware = require("../middlewares/authMiddleware");
 const authRole = require("../middlewares/rbaMiddleware");
 const Sale = require("../models/sales");
+const { getAgentDashboardSummary } = require("../controllers/salesController");
 const router = express.Router();
+
+// GET /sales/dashboard — agent summary (must come before any /:id route)
+router.get("/dashboard", authMiddleware, getAgentDashboardSummary);
 router.post(
   "/",
   authMiddleware,
@@ -82,7 +86,8 @@ router.post(
         contact: contacts,
         amountDue,
         dueDate,
-        dispatchDate
+        dispatchDate,
+        recordedBy: req.user.id  // set from verified token, never from frontend
       });
       await sale.save();
 
@@ -93,7 +98,5 @@ router.post(
     }
   }
 );
-
-module.exports = router;
 
 module.exports = router;
