@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const authMiddleware = require("../middlewares/authMiddleware");
+const authRole = require("../middlewares/rbaMiddleware");
+const { getBranchUsers } = require("../controllers/userController");
 
 const router = express.Router();
 
@@ -73,6 +75,11 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+// GET /users/branch — manager sees only their own branch's users
+// Branch is read from the JWT (req.user.branch), never from the request body/query.
+// Must be declared before /:id to avoid the wildcard capturing "branch" as an id.
+router.get("/branch", authMiddleware, authRole("Manager"), getBranchUsers);
 
 // Update user bio and profile picture
 router.put("/:id", authMiddleware, async (req, res) => {

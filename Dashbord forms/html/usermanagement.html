@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Management</title>
-    <!-- font awesome -->
+    <title>User Management | Karibu</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
     <link rel="stylesheet" href="/Dashbord forms/CSS/managersDashboard.css">
-    <link rel="stylesheet" href="/Dashbord forms/CSS/procurementform.css">
+    <link rel="stylesheet" href="/Dashbord forms/CSS/usermanagement.css">
 </head>
 <body>
     <!-- SIDEBAR -->
@@ -70,64 +69,79 @@
     </aside>
 
     <main>
-        <div class="header">
-            <h1>User Management</h1>
-            <p>Add new users to the system</p>
+
+        <!-- Page header -->
+        <div class="header um-header">
+            <div>
+                <h1>User Management</h1>
+                <p id="branch-label">Loading branch users…</p>
+            </div>
+            <a href="/Dashbord forms/html/addUser.html" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Add User
+            </a>
         </div>
 
-        <div class="user-form-container">
-            <form id="userForm" class="form-box">
-                <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" name="name" class="input" required />
-                </div>
+        <!-- Alert banner -->
+        <div id="alert-box" class="um-alert hidden" role="alert"></div>
 
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" class="input" required />
-                </div>
+        <!-- Search & sort controls -->
+        <div class="controls-bar">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="Search by name, email or role…"
+                    autocomplete="off"
+                >
+                <button type="button" id="clearSearch" class="clear-btn" aria-label="Clear search">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="input" required />
-                </div>
+            <div class="sort-wrapper">
+                <span class="sort-label">Sort:</span>
+                <button type="button" id="sortAZ" class="sort-btn active" data-sort="az">
+                    <i class="fas fa-sort-alpha-down"></i> A–Z
+                </button>
+                <button type="button" id="sortZA" class="sort-btn" data-sort="za">
+                    <i class="fas fa-sort-alpha-up"></i> Z–A
+                </button>
+            </div>
+        </div>
+        <p id="resultCount" class="result-count"></p>
 
-                <div class="form-group">
-                    <label for="role">Role</label>
-                    <select id="role" name="role" class="input" required>
-                        <option value="" disabled selected>Select role</option>
-                        <option value="Manager">Manager</option>
-                        <option value="Sales-agent">Sales-agent</option>
-                        <option value="Director">Director</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="branch">Branch</label>
-                    <select id="branch" name="branch" class="input">
-                        <option value="" disabled selected>Select branch (if applicable)</option>
-                        <option value="Maganjo">Maganjo</option>
-                        <option value="Matugga">Matugga</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="phone">Phone</label>
-                    <input type="tel" id="phone" name="phone" class="input" />
-                </div>
-
-                <div class="form-group">
-                    <label for="bio">Bio</label>
-                    <textarea id="bio" name="bio" class="input" rows="3"></textarea>
-                </div>
-
-                <div class="submit-btn">
-                    <button type="submit" class="btn btn-primary">Register User</button>
-                </div>
-            </form>
+        <!-- Users table -->
+        <div class="table-container">
+            <table class="procurement-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Branch</th>
+                        <th>Phone</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <tr class="loading-row">
+                        <td colspan="6" class="text-center">
+                            <i class="fas fa-spinner fa-spin"></i>&nbsp; Loading users…
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
-        <div id="userMessage" class="no-results" style="display:none;"></div>
+        <!-- Empty state -->
+        <div id="noResultsMessage" class="no-results" style="display:none;">
+            <i class="fas fa-users-slash"></i>
+            <h3>No users found</h3>
+            <p>No users match your search in this branch.</p>
+        </div>
+
     </main>
 
     <script src="/Dashbord forms/JS/usermanagement.js"></script>

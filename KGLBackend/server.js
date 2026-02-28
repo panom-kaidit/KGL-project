@@ -29,6 +29,7 @@ const salesRoutes = require(path.join(__dirname,"src","routes","salesRoutes"));
 const userRoutes = require(path.join(__dirname,"src","routes","userRoutes"));
 const statisticsRoutes = require(path.join(__dirname,"src","routes","statisticsRoutes"));
 const inventoryRoutes = require(path.join(__dirname,"src","routes","inventoryRoutes"));
+const creditRoutes = require(path.join(__dirname,"src","routes","creditRoutes"));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/procurement", procurementRoutes);
@@ -36,6 +37,7 @@ app.use("/sales", salesRoutes);
 app.use("/users", userRoutes);
 app.use("/api/manager", statisticsRoutes);
 app.use("/api/inventory", inventoryRoutes);
+app.use("/credits", creditRoutes);
 // server listening  on the specified port
 app.listen(port,(err)=>{
     if(err){

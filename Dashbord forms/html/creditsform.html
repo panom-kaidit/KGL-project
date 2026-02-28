@@ -1,127 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Credits |Form </title>
-    <link rel="stylesheet" href="/Dashbord forms/CSS/salesform.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Payment | Karibu</title>
+  <link rel="stylesheet" href="/Dashbord forms/CSS/creditsform.css">
 </head>
 <body>
 
-    <div class="login-container">
+<div class="page-wrapper">
 
-        <!-- Header -->
-        <div class="form-header">
-            <img src="/images/logo/karibu icon.png" alt="Karibu icon">
-            <h1>Karibu</h1>
-            <h2>Creadits Form</h2>
-            <p>Please enter credit details</p>
-        </div>
+  <!-- ── Header ─────────────────────────────────────────────────────────────── -->
+  <div class="form-header">
+    <img src="/images/logo/karibu icon.png" alt="Karibu">
+    <h1>Karibu</h1>
+    <h2>Credit Payment</h2>
+    <p>Look up a credit sale and record a customer payment</p>
+  </div>
 
-        <!-- Form -->
-        <form class="form-box">
+  <!-- ── Global alert banner ────────────────────────────────────────────────── -->
+  <div id="alert-box" class="alert hidden" role="alert"></div>
 
-            <!-- Sale Info -->
-            <div class="form-group">
-                <label for="creditID">Sale ID / Receipt Number</label>
-                <input class="input" type="text" id="creditID" placeholder="Receipt number" required>
-            </div>
+  <!-- ── SECTION 1 · Search ─────────────────────────────────────────────────── -->
+  <div class="card" id="search-card">
+    <h3 class="card-title">Find Credit Sale</h3>
+    <div class="search-row">
+      <input
+        class="input"
+        type="text"
+        id="search-id"
+        placeholder="Enter Sale ID (MongoDB _id)"
+        autocomplete="off"
+      >
+      <button type="button" class="btn-primary" id="btn-search" onclick="searchCredit()">Search</button>
+    </div>
+    <p class="hint">You can find the Sale ID on the original credit receipt or the credit list.</p>
+  </div>
 
-            <div class="form-group">
-                <label for="sale-date">Sale Date</label>
-                <input class="input" type="date" id="sale-date" required>
-            </div>
-
-            <!-- Customer Info -->
-            <div class="form-group">
-                <label for="customer-name">Customer Name</label>
-                <input class="input" type="text" id="customer-name" placeholder="Customer name">
-            </div>
-
-            <div class="form-group">
-                <label for="customer-name">National ID</label>
-                <input class="input" type="NIN" id="customer-name" placeholder="Identification">
-            </div>
-
-            <div class="form-group">
-                <label for="customer-name">Location</label>
-                <input class="input" type="text" id="customer-name" placeholder="Customer's Location">
-            </div>
-
-            <div class="form-group">
-                <label for="customer-phone">Customer Phone</label>
-                <input class="input" type="tel" id="customer-phone" placeholder="Phone number">
-            </div>
-
-            <!-- Product Info -->
-            <div class="form-group">
-                <label for="product-name">Product Name</label>
-                <input class="input" type="text" id="product-name" placeholder="Product name" required>
-            </div>
-
-            <div class="form-group">
-                <label for="product-category">Product Category</label>
-                <select class="select" name="" id="">
-                    <option value="Category">Category</option>
-                    <option value="Cereal">Cereal</option>
-                </select>
-                <input class="input" type="text" id="product-category" placeholder="Category">
-            </div>
-
-            <div class="form-group">
-                <label for="quantity">Quantity Sold</label>
-                <input class="input" type="number" id="quantity" required>
-            </div>
-
-            <div class="form-group">
-                <label for="unit-price">Unit Price</label>
-                <input class="input" type="number" step="0.01" id="unit-price" required>
-            </div>
-
-
-            <div class="form-group">
-                <label for="sales-person">Sales Person</label>
-                <input class="input" type="text" id="sales-person" placeholder="Your name" required>
-            </div>
-
-
-            <div class="form-group">
-                <label for="amount-paid">Amount Paid</label>
-                <input class="input" type="number" id="amount-paid" required>
-            </div>
-
-            <!-- Payment Info -->
-            <div class="form-group">
-                <label>Payment Method</label>
-                <div class="remember">
-                    <label><input type="radio" name="payment"> Cash</label>
-                    <label><input type="radio" name="payment"> Mobile Money</label>
-                    <label><input type="radio" name="payment"> Card</label>
-                </div>
-            </div>
-
-            <!-- Payment Status -->
-            <div class="form-group">
-                <label>Payment Status</label>
-                <div class="remember">
-                    <label>
-                        <input type="radio" name="payment_status" value="paid"> Paid
-                    </label>
-                    <label>
-                        <input type="radio" name="payment_status" value="pending"> Pending
-                    </label>
-                    <label>
-                        <input type="radio" name="payment_status" value="partial"> Partial
-                    </label>
-                </div>
-            </div>
-            <!-- Submit -->
-            <div class="submit-btn">
-                <button type="submit">Submit Sale</button>
-            </div>
-
-        </form>
+  <!-- ── SECTION 2 · Sale Details (hidden until search succeeds) ───────────── -->
+  <div class="card hidden" id="details-card">
+    <div class="card-title-row">
+      <h3 class="card-title">Sale Details</h3>
+      <span class="badge" id="status-badge">pending</span>
     </div>
 
+    <!-- Customer info -->
+    <div class="detail-grid">
+      <div class="detail-item">
+        <span class="detail-label">Customer</span>
+        <span class="detail-value" id="d-customer">—</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">National ID</span>
+        <span class="detail-value" id="d-nin">—</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Phone</span>
+        <span class="detail-value" id="d-phone">—</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Location</span>
+        <span class="detail-value" id="d-location">—</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Product info -->
+    <div class="detail-grid">
+      <div class="detail-item">
+        <span class="detail-label">Product</span>
+        <span class="detail-value" id="d-product">—</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Tonnage</span>
+        <span class="detail-value" id="d-tonnage">—</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Sale Date</span>
+        <span class="detail-value" id="d-date">—</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Due Date</span>
+        <span class="detail-value" id="d-duedate">—</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Balance summary -->
+    <div class="balance-row">
+      <div class="balance-item balance-total">
+        <span class="balance-label">Original Amount</span>
+        <span class="balance-value" id="d-original">—</span>
+      </div>
+      <div class="balance-item balance-paid">
+        <span class="balance-label">Total Paid</span>
+        <span class="balance-value" id="d-totalpaid">—</span>
+      </div>
+      <div class="balance-item balance-due">
+        <span class="balance-label">Balance Due</span>
+        <span class="balance-value" id="d-amountdue">—</span>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <p class="progress-label" id="progress-label"></p>
+
+    <!-- Payment history -->
+    <details class="history-toggle">
+      <summary>Payment History (<span id="history-count">0</span> entries)</summary>
+      <div class="table-wrap">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Date</th>
+              <th>Amount Paid</th>
+              <th>Recorded By</th>
+            </tr>
+          </thead>
+          <tbody id="history-body">
+            <tr><td colspan="4" class="no-data">No payments yet</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+
+  <!-- ── SECTION 3 · Payment Form (hidden when sale is paid) ──────────────── -->
+  <div class="card hidden" id="payment-card">
+    <h3 class="card-title">Record Payment</h3>
+    <form id="payment-form" onsubmit="submitPayment(event)">
+
+      <div class="form-group">
+        <label for="payment-amount">Payment Amount (UGX)</label>
+        <input
+          class="input"
+          type="number"
+          id="payment-amount"
+          min="1"
+          step="1"
+          placeholder="Enter amount received"
+          required
+        >
+        <span class="field-hint" id="max-hint"></span>
+      </div>
+
+      <div class="form-group">
+        <label>Payment Method</label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" name="paymentMethod" value="Cash" checked> Cash
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="paymentMethod" value="Mobile Money"> Mobile Money
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="paymentMethod" value="Bank Transfer"> Bank Transfer
+          </label>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="submit" class="btn-primary" id="btn-pay">Confirm Payment</button>
+        <button type="button" class="btn-secondary" onclick="resetPage()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- ── SECTION 4 · Fully paid confirmation ──────────────────────────────── -->
+  <div class="card hidden" id="paid-card">
+    <div class="paid-banner">
+      <div class="paid-icon">&#10003;</div>
+      <h3>Credit Fully Settled</h3>
+      <p>This sale has been completely paid off. No further payments are due.</p>
+      <button type="button" class="btn-secondary" onclick="resetPage()">Search Another</button>
+    </div>
+  </div>
+
+</div><!-- /page-wrapper -->
+
+<script src="/Dashbord forms/JS/creditsform.js"></script>
 </body>
 </html>

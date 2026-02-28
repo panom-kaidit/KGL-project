@@ -1,70 +1,206 @@
-// Base URL
-const API_BASE_URL = 'http://localhost:3000';
+/**
+ * usermanagement.js — Branch User List
+ *
+ * Fetches all users belonging to the logged-in manager's branch
+ * via GET /users/branch, renders them into a searchable, sortable table.
+ *
+ * Branch filtering is enforced server-side from the JWT token;
+ * the frontend never sends a branch value in the request.
+ */
 
-// Wait for DOM
-document.addEventListener('DOMContentLoaded', () => {
-  const userForm = document.getElementById('userForm');
-  if (userForm) {
-    userForm.addEventListener('submit', handleUserFormSubmit);
+'use strict';
+
+const API_BASE = 'http://localhost:3000';
+
+// ── State ─────────────────────────────────────────────────────────────────────
+
+let allUsers    = [];   // full list from API
+let currentSort = 'az'; // 'az' | 'za'
+
+// ── Auth helpers ──────────────────────────────────────────────────────────────
+
+function getToken() {
+  return localStorage.getItem('token');
+}
+
+function decodeToken(token) {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch {
+    return null;
   }
-});
+}
 
-async function handleUserFormSubmit(e) {
-  e.preventDefault();
+// ── Alert ─────────────────────────────────────────────────────────────────────
 
-  const token = localStorage.getItem('token');
+function showAlert(message, type) {
+  const box = document.getElementById('alert-box');
+  box.className = 'um-alert ' + (type || 'error');
+  box.textContent = message;
+}
+
+// ── Avatar helper — first letter of name ─────────────────────────────────────
+
+function avatarLetter(name) {
+  return (name || '?').charAt(0).toUpperCase();
+}
+
+// ── Role badge CSS class ──────────────────────────────────────────────────────
+
+function roleBadgeClass(role) {
+  var map = {
+    'Manager':     'role-manager',
+    'Sales-agent': 'role-sales-agent',
+    'Director':    'role-director'
+  };
+  return map[role] || 'role-default';
+}
+
+// ── Basic XSS guard ───────────────────────────────────────────────────────────
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// ── Render table rows ─────────────────────────────────────────────────────────
+
+function renderTable(users) {
+  var tbody     = document.getElementById('usersTableBody');
+  var noResults = document.getElementById('noResultsMessage');
+  var countEl   = document.getElementById('resultCount');
+
+  if (users.length === 0) {
+    tbody.innerHTML         = '';
+    noResults.style.display = 'flex';
+    countEl.textContent     = '';
+    return;
+  }
+
+  noResults.style.display = 'none';
+  countEl.textContent     = 'Showing ' + users.length + ' user' + (users.length !== 1 ? 's' : '');
+
+  tbody.innerHTML = users.map(function(u, i) {
+    return '<tr>' +
+      '<td class="row-num">' + (i + 1) + '</td>' +
+      '<td>' +
+        '<div class="user-name-cell">' +
+          '<div class="avatar">' + avatarLetter(u.name) + '</div>' +
+          '<span>' + escHtml(u.name || '—') + '</span>' +
+        '</div>' +
+      '</td>' +
+      '<td>' + escHtml(u.email || '—') + '</td>' +
+      '<td>' +
+        '<span class="role-badge ' + roleBadgeClass(u.role) + '">' +
+          escHtml(u.role || '—') +
+        '</span>' +
+      '</td>' +
+      '<td><span class="branch-badge">' + escHtml(u.branch || '—') + '</span></td>' +
+      '<td>' + escHtml(u.phone || '—') + '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+// ── Apply current search + sort and re-render ─────────────────────────────────
+
+function applyFilters() {
+  var query = document.getElementById('searchInput').value.trim().toLowerCase();
+
+  var filtered = allUsers.filter(function(u) {
+    var haystack = ((u.name || '') + ' ' + (u.email || '') + ' ' +
+                    (u.role || '') + ' ' + (u.branch || '') + ' ' +
+                    (u.phone || '')).toLowerCase();
+    return haystack.indexOf(query) !== -1;
+  });
+
+  filtered.sort(function(a, b) {
+    var nameA = (a.name || '').toLowerCase();
+    var nameB = (b.name || '').toLowerCase();
+    return currentSort === 'az'
+      ? nameA.localeCompare(nameB)
+      : nameB.localeCompare(nameA);
+  });
+
+  renderTable(filtered);
+}
+
+// ── Fetch branch users from the API ──────────────────────────────────────────
+
+async function loadBranchUsers() {
+  var token = getToken();
   if (!token) {
-    alert('Please login first');
     window.location.href = '/loginform/html/login.html';
     return;
   }
 
-  const name = document.getElementById('name').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-  const role = document.getElementById('role').value;
-  const branch = document.getElementById('branch').value;
-  const phone = document.getElementById('phone').value.trim();
-  const bio = document.getElementById('bio').value.trim();
-
-  // Basic validation
-  if (!name || !email || !password || !role) {
-    showMessage('Name, email, password and role are required', 'error');
+  var decoded = decodeToken(token);
+  if (!decoded || decoded.role !== 'Manager') {
+    showAlert('Access denied. This page is for Managers only.', 'error');
     return;
   }
 
-  const payload = { name, email, password, role };
-  if (branch) payload.branch = branch;
-  if (phone) payload.phone = phone;
-  if (bio) payload.bio = bio;
-
   try {
-    const res = await fetch(`${API_BASE_URL}/users/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(payload)
+    var res  = await fetch(API_BASE + '/users/branch', {
+      headers: { Authorization: 'Bearer ' + token }
     });
-    const data = await res.json();
+    var body = await res.json();
+
     if (!res.ok) {
-      showMessage(data.message || 'Failed to register user', 'error');
-      console.error('Register error', data);
+      showAlert(body.message || 'Failed to load users.', 'error');
+      document.getElementById('usersTableBody').innerHTML =
+        '<tr><td colspan="6" class="text-center">Could not load users.</td></tr>';
       return;
     }
-    showMessage('User registered successfully', 'success');
-    document.getElementById('userForm').reset();
-  } catch (err) {
-    console.error('Network error', err);
-    showMessage('Network error while registering user', 'error');
+
+    allUsers = body.data || [];
+
+    document.getElementById('branch-label').textContent =
+      'Branch: ' + body.branch + ' — ' + body.count +
+      ' user' + (body.count !== 1 ? 's' : '');
+
+    applyFilters();
+
+  } catch {
+    showAlert('Network error. Please check your connection.', 'error');
+    document.getElementById('usersTableBody').innerHTML =
+      '<tr><td colspan="6" class="text-center">Network error.</td></tr>';
   }
 }
 
-function showMessage(msg, type='info') {
-  const container = document.getElementById('userMessage');
-  container.textContent = msg;
-  container.className = type === 'error' ? 'no-results error' : 'no-results success';
-  container.style.display = 'flex';
-  setTimeout(() => { container.style.display = 'none'; }, 4000);
-}
+// ── Boot ──────────────────────────────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', function() {
+  loadBranchUsers();
+
+  var searchInput = document.getElementById('searchInput');
+  var clearBtn    = document.getElementById('clearSearch');
+
+  searchInput.addEventListener('input', function() {
+    clearBtn.style.display = searchInput.value ? 'block' : 'none';
+    applyFilters();
+  });
+
+  clearBtn.addEventListener('click', function() {
+    searchInput.value      = '';
+    clearBtn.style.display = 'none';
+    applyFilters();
+    searchInput.focus();
+  });
+
+  document.getElementById('sortAZ').addEventListener('click', function() {
+    currentSort = 'az';
+    document.getElementById('sortAZ').classList.add('active');
+    document.getElementById('sortZA').classList.remove('active');
+    applyFilters();
+  });
+
+  document.getElementById('sortZA').addEventListener('click', function() {
+    currentSort = 'za';
+    document.getElementById('sortZA').classList.add('active');
+    document.getElementById('sortAZ').classList.remove('active');
+    applyFilters();
+  });
+});
