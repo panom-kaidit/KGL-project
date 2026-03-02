@@ -1,105 +1,215 @@
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = "http://localhost:3000";
 
 let allSales = [];
-let salesSortDirection = 'desc';
-let saleTypeFilter = 'all'; // 'all' | 'cash' | 'credit'
+let salesSortDirection = "desc";
+let saleTypeFilter = "all";
 
-document.addEventListener('DOMContentLoaded', () => {
-  const token = localStorage.getItem('token');
+function escHtml(str) {
+  return String(str === null || str === undefined ? "" : str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function decodeToken(token) {
+  try {
+    return JSON.parse(atob(token.split(".")[1]));
+  } catch {
+    return null;
+  }
+}
+
+function normalizeName(name) {
+  return String(name || "").trim().toLowerCase();
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const token = localStorage.getItem("token");
   if (!token) {
-    window.location.href = '/loginform/html/login.html';
+    window.location.href = "/loginform/html/login.html";
     return;
   }
 
   setupControls();
-  loadBranchSales();
+  loadGoSellProducts();
+  loadSalesForCurrentRole();
 });
 
+async function loadGoSellProducts() {
+  const grid = document.getElementById("product-grid");
+  if (!grid) return;
+
+  const token = localStorage.getItem("token");
+  try {
+    grid.innerHTML = '<p style="padding:16px;color:#666;">Loading products...</p>';
+
+    const [pricingRes, inventoryRes] = await Promise.all([
+      fetch(API_BASE_URL + "/api/pricing", {
+        headers: { Authorization: "Bearer " + token }
+      }),
+      fetch(API_BASE_URL + "/api/inventory", {
+        headers: { Authorization: "Bearer " + token }
+      })
+    ]);
+
+    if (
+      pricingRes.status === 401 ||
+      pricingRes.status === 403 ||
+      inventoryRes.status === 401 ||
+      inventoryRes.status === 403
+    ) {
+      window.location.href = "/loginform/html/login.html";
+      return;
+    }
+
+    if (!pricingRes.ok) throw new Error("Pricing error " + pricingRes.status);
+    if (!inventoryRes.ok) throw new Error("Inventory error " + inventoryRes.status);
+
+    const pricingData = await pricingRes.json();
+    const inventoryData = await inventoryRes.json();
+
+    const pricingProducts = pricingData.products || [];
+    const inventoryItems = inventoryData.items || [];
+    const inventoryByName = inventoryItems.reduce((acc, item) => {
+      acc[normalizeName(item.itemName)] = item;
+      return acc;
+    }, {});
+
+    const merged = pricingProducts.map((p) => {
+      const inv = inventoryByName[normalizeName(p.productName)] || null;
+      const availableKg = inv ? Number(inv.stockKg || 0) : 0;
+      return {
+        productName: p.productName,
+        sellingPrice: p.sellingPrice,
+        hasPricing: p.sellingPrice !== null && p.sellingPrice !== undefined,
+        availableKg
+      };
+    });
+
+    if (merged.length === 0) {
+      grid.innerHTML =
+        '<p style="padding:16px;color:#888;">No products available for this branch.</p>';
+      return;
+    }
+
+    grid.innerHTML = merged
+      .map(function (item) {
+        const priceReady = item.hasPricing;
+        const stockReady = item.availableKg > 0;
+        const canSell = priceReady && stockReady;
+
+        const priceText = priceReady
+          ? "UGX " + Number(item.sellingPrice).toLocaleString() + " / Kg"
+          : "Price not set";
+        const stockText =
+          "Available: " + Number(item.availableKg).toLocaleString() + " Kg";
+        const reason = !priceReady
+          ? "Manager must set selling price first"
+          : !stockReady
+          ? "Out of stock"
+          : "";
+
+        return (
+          '<div class="product--card">' +
+          "<h4>" +
+          escHtml(item.productName) +
+          "</h4>" +
+          "<p><strong>Price:</strong> " +
+          escHtml(priceText) +
+          "</p>" +
+          "<p><strong>" +
+          escHtml(stockText) +
+          "</strong></p>" +
+          '<a href="/Dashbord forms/html/salesform.html?product=' +
+          encodeURIComponent(item.productName) +
+          '">' +
+          '<button ' +
+          (canSell ? "" : 'disabled title="' + escHtml(reason) + '"') +
+          ">Sell</button>" +
+          "</a>" +
+          "</div>"
+        );
+      })
+      .join("");
+  } catch (err) {
+    console.error("Failed to load GoSell products:", err);
+    grid.innerHTML =
+      '<p style="padding:16px;color:#c62828;">Could not load products. Please refresh.</p>';
+  }
+}
+
 function setupControls() {
-  const searchInput = document.getElementById('salesSearchInput');
-  const clearBtn    = document.getElementById('clearSalesSearch');
-  const sortDescBtn = document.getElementById('salesSortDesc');
-  const sortAscBtn  = document.getElementById('salesSortAsc');
-  const filterAll    = document.getElementById('filterAll');
-  const filterCash   = document.getElementById('filterCash');
-  const filterCredit = document.getElementById('filterCredit');
+  const searchInput = document.getElementById("salesSearchInput");
+  const clearBtn = document.getElementById("clearSalesSearch");
+  const sortDescBtn = document.getElementById("salesSortDesc");
+  const sortAscBtn = document.getElementById("salesSortAsc");
+  const filterAll = document.getElementById("filterAll");
+  const filterCash = document.getElementById("filterCash");
+  const filterCredit = document.getElementById("filterCredit");
+  if (!searchInput) return;
 
-  // Search
-  searchInput.addEventListener('input', () => {
-    clearBtn.style.display = searchInput.value ? 'block' : 'none';
+  searchInput.addEventListener("input", function () {
+    clearBtn.style.display = searchInput.value ? "block" : "none";
     applyFilters();
   });
-
-  clearBtn.addEventListener('click', () => {
-    searchInput.value = '';
-    clearBtn.style.display = 'none';
+  clearBtn.addEventListener("click", function () {
+    searchInput.value = "";
+    clearBtn.style.display = "none";
     applyFilters();
   });
-
-  // Date sort
-  sortDescBtn.addEventListener('click', () => {
-    salesSortDirection = 'desc';
-    sortDescBtn.classList.add('active');
-    sortAscBtn.classList.remove('active');
+  sortDescBtn.addEventListener("click", function () {
+    salesSortDirection = "desc";
+    sortDescBtn.classList.add("active");
+    sortAscBtn.classList.remove("active");
     applyFilters();
   });
-
-  sortAscBtn.addEventListener('click', () => {
-    salesSortDirection = 'asc';
-    sortAscBtn.classList.add('active');
-    sortDescBtn.classList.remove('active');
+  sortAscBtn.addEventListener("click", function () {
+    salesSortDirection = "asc";
+    sortAscBtn.classList.add("active");
+    sortDescBtn.classList.remove("active");
     applyFilters();
   });
-
-  // Sale type filter
-  filterAll.addEventListener('click', () => {
-    saleTypeFilter = 'all';
+  filterAll.addEventListener("click", function () {
+    saleTypeFilter = "all";
     setActiveTypeBtn(filterAll);
     applyFilters();
   });
-
-  filterCash.addEventListener('click', () => {
-    saleTypeFilter = 'cash';
+  filterCash.addEventListener("click", function () {
+    saleTypeFilter = "cash";
     setActiveTypeBtn(filterCash);
     applyFilters();
   });
-
-  filterCredit.addEventListener('click', () => {
-    saleTypeFilter = 'credit';
+  filterCredit.addEventListener("click", function () {
+    saleTypeFilter = "credit";
     setActiveTypeBtn(filterCredit);
     applyFilters();
   });
 }
 
 function setActiveTypeBtn(activeBtn) {
-  ['filterAll', 'filterCash', 'filterCredit'].forEach(id => {
-    document.getElementById(id).classList.remove('active');
+  ["filterAll", "filterCash", "filterCredit"].forEach(function (id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove("active");
   });
-  activeBtn.classList.add('active');
+  activeBtn.classList.add("active");
 }
 
 function applyFilters() {
-  const query = document.getElementById('salesSearchInput').value.trim();
-
-  // Build regex (with fallback for invalid patterns)
-  let pattern;
-  try {
-    pattern = new RegExp(query, 'i');
-  } catch {
-    pattern = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
-  }
+  const rawQuery = document.getElementById("salesSearchInput").value.trim();
+  const safeQuery = rawQuery.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const pattern = safeQuery ? new RegExp(safeQuery, "i") : null;
 
   let filtered = allSales;
-
-  // Filter by sale type
-  if (saleTypeFilter !== 'all') {
-    filtered = filtered.filter(sale => sale.saleType === saleTypeFilter);
+  if (saleTypeFilter !== "all") {
+    filtered = filtered.filter(function (s) {
+      return s.saleType === saleTypeFilter;
+    });
   }
-
-  // Filter by search query
-  if (query) {
-    filtered = filtered.filter(sale => {
-      const agentName = sale.recordedBy?.name || sale.salesAgent || '';
+  if (pattern) {
+    filtered = filtered.filter(function (sale) {
+      const agentName =
+        sale.recordedBy && sale.recordedBy.name ? sale.recordedBy.name : sale.salesAgent || "";
       const haystack = [
         sale.produceName,
         sale.produceType,
@@ -110,125 +220,141 @@ function applyFilters() {
         agentName,
         sale.date,
         sale.time
-      ].join(' ');
+      ].join(" ");
       return pattern.test(haystack);
     });
   }
-
-  // Sort by date (and time as tiebreaker)
-  filtered = [...filtered].sort((a, b) => {
-    const dateA = (a.date || '') + ' ' + (a.time || '');
-    const dateB = (b.date || '') + ' ' + (b.time || '');
-    return salesSortDirection === 'desc'
-      ? dateB.localeCompare(dateA)
-      : dateA.localeCompare(dateB);
+  filtered = filtered.slice().sort(function (a, b) {
+    const da = (a.date || "") + " " + (a.time || "");
+    const db = (b.date || "") + " " + (b.time || "");
+    return salesSortDirection === "desc" ? db.localeCompare(da) : da.localeCompare(db);
   });
-
   updateResultCount(filtered.length, allSales.length);
   displaySales(filtered);
 }
 
 function updateResultCount(shown, total) {
-  const el = document.getElementById('salesResultCount');
+  const el = document.getElementById("salesResultCount");
   if (!el) return;
-  el.textContent = shown === total
-    ? `${total} record${total !== 1 ? 's' : ''}`
-    : `Showing ${shown} of ${total} records`;
+  el.textContent =
+    shown === total
+      ? total + " record" + (total !== 1 ? "s" : "")
+      : "Showing " + shown + " of " + total + " records";
 }
 
-async function loadBranchSales() {
+async function loadSalesForCurrentRole() {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
+    const user = decodeToken(token);
+    const endpoint =
+      user && user.role === "Sales-agent" ? "/sales/history" : "/sales/branch";
 
-    const response = await fetch(`${API_BASE_URL}/sales/branch`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+    const response = await fetch(API_BASE_URL + endpoint, {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" }
     });
 
     if (response.status === 401 || response.status === 403) {
-      window.location.href = '/loginform/html/login.html';
+      if (endpoint === "/sales/branch") {
+        allSales = [];
+        applyFilters();
+        return;
+      }
+      window.location.href = "/loginform/html/login.html";
       return;
     }
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch sales: ${response.status}`);
-    }
+    if (!response.ok) throw new Error("Failed to fetch sales: " + response.status);
 
     const result = await response.json();
     allSales = result.data || [];
-
     applyFilters();
-
   } catch (error) {
-    console.error('Error loading branch sales:', error);
-    document.getElementById('salesTableBody').innerHTML =
-      '<tr class="error-row"><td colspan="11" class="text-center">Error loading sales. Please try again.</td></tr>';
+    console.error("Error loading sales:", error);
+    const tbody = document.getElementById("salesTableBody");
+    if (tbody) {
+      tbody.innerHTML =
+        '<tr class="error-row"><td colspan="11" class="text-center">Error loading sales. Please try again.</td></tr>';
+    }
   }
 }
 
 function displaySales(sales) {
-  const tableBody = document.getElementById('salesTableBody');
-  const noResults = document.getElementById('salesNoResults');
-
+  const tableBody = document.getElementById("salesTableBody");
+  const noResults = document.getElementById("salesNoResults");
   if (!sales || sales.length === 0) {
-    tableBody.innerHTML = '';
-    noResults.classList.remove('no-results--hidden');
+    if (tableBody) tableBody.innerHTML = "";
+    if (noResults) noResults.classList.remove("no-results--hidden");
     return;
   }
+  if (noResults) noResults.classList.add("no-results--hidden");
 
-  noResults.classList.add('no-results--hidden');
-
-  tableBody.innerHTML = sales.map(sale => {
-    const isCash = sale.saleType === 'cash';
-    const amount = isCash
-      ? formatCurrency(sale.amountPaid || 0)
-      : formatCurrency(sale.amountDue || 0);
-    const saleTypeBadge = isCash
-      ? '<span class="badge cash">Cash</span>'
-      : '<span class="badge credit">Credit</span>';
-    const statusBadge = isCash
-      ? '<span class="badge cash">Paid</span>'
-      : '<span class="badge credit">Due</span>';
-
-    const agentName = sale.recordedBy?.name || sale.salesAgent || '-';
-
-    return `
-      <tr>
-        <td>${formatDate(sale.date)}</td>
-        <td>${sale.time || '-'}</td>
-        <td>${sale.produceName || '-'}</td>
-        <td>${sale.produceType || '-'}</td>
-        <td>${formatNumber(sale.tonnage || 0)} kg</td>
-        <td>${saleTypeBadge}</td>
-        <td>${amount}</td>
-        <td>${sale.buyerName || '-'}</td>
-        <td>${sale.contact || '-'}</td>
-        <td>${agentName}</td>
-        <td>${statusBadge}</td>
-      </tr>
-    `;
-  }).join('');
+  tableBody.innerHTML = sales
+    .map(function (sale) {
+      const isCash = sale.saleType === "cash";
+      const amount = isCash ? formatCurrency(sale.amountPaid || 0) : formatCurrency(sale.amountDue || 0);
+      const typeBadge = isCash
+        ? '<span class="badge cash">Cash</span>'
+        : '<span class="badge credit">Credit</span>';
+      const statusBadge = isCash
+        ? '<span class="badge cash">Paid</span>'
+        : '<span class="badge credit">Due</span>';
+      const agentName = escHtml(
+        sale.recordedBy && sale.recordedBy.name ? sale.recordedBy.name : sale.salesAgent || "-"
+      );
+      return (
+        "<tr>" +
+        "<td>" +
+        escHtml(formatDate(sale.date)) +
+        "</td>" +
+        "<td>" +
+        escHtml(sale.time || "-") +
+        "</td>" +
+        "<td>" +
+        escHtml(sale.produceName || "-") +
+        "</td>" +
+        "<td>" +
+        escHtml(sale.produceType || "-") +
+        "</td>" +
+        "<td>" +
+        formatNumber(sale.tonnage || 0) +
+        " kg</td>" +
+        "<td>" +
+        typeBadge +
+        "</td>" +
+        "<td>" +
+        amount +
+        "</td>" +
+        "<td>" +
+        escHtml(sale.buyerName || "-") +
+        "</td>" +
+        "<td>" +
+        escHtml(sale.contact || "-") +
+        "</td>" +
+        "<td>" +
+        agentName +
+        "</td>" +
+        "<td>" +
+        statusBadge +
+        "</td>" +
+        "</tr>"
+      );
+    })
+    .join("");
 }
 
-function formatDate(dateString) {
-  if (!dateString) return '-';
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
+function formatDate(ds) {
+  if (!ds) return "-";
+  return new Date(ds).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric"
   });
 }
-
 function formatNumber(num) {
-  return Math.round(num).toLocaleString('en-US');
+  return Math.round(num).toLocaleString("en-US");
 }
-
 function formatCurrency(num) {
-  return Number(num).toLocaleString('en-US', {
+  return Number(num).toLocaleString("en-US", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
   });

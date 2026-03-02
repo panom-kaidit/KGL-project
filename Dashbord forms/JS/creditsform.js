@@ -119,6 +119,13 @@ function computeTotalPaid(sale) {
   return (sale.paymentHistory || []).reduce((sum, e) => sum + (e.amount || 0), 0);
 }
 
+// ADDED: XSS guard for all server-sourced data injected into innerHTML
+function escHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 function renderHistory(entries) {
   const tbody = document.getElementById('history-body');
   document.getElementById('history-count').textContent = entries.length;
@@ -128,14 +135,16 @@ function renderHistory(entries) {
     return;
   }
 
+  // FIXED (SECURITY-08 / XSS): `e.recordedBy?.name` was injected raw into innerHTML.
+  // A stored payload in the name field would execute. Now escaped with escHtml().
   tbody.innerHTML = entries
     .map(
       (e, i) => `
         <tr>
           <td>${i + 1}</td>
-          <td>${fmtDate(e.date)}</td>
+          <td>${escHtml(fmtDate(e.date))}</td>
           <td>UGX ${fmt(e.amount)}</td>
-          <td>${e.recordedBy?.name || e.recordedBy || 'Unknown'}</td>
+          <td>${escHtml(e.recordedBy?.name || String(e.recordedBy || 'Unknown'))}</td>
         </tr>`
     )
     .join('');

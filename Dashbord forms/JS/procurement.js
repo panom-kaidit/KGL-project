@@ -13,13 +13,10 @@ let productCategoryInput;
 let quantityInput;
 let unitPriceInput;
 let sellingPriceInput;
-let branchInput;
 let totalAmountInput; // legacy alias, will point to sellingPriceInput
 
 // Initialize form elements when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM loaded, initializing form elements...');
-  
   procurementForm = document.querySelector('.form-box');
   supplierNameInput = document.getElementById('supplier-name');
   supplierContactInput = document.getElementById('supplier-contact');
@@ -31,29 +28,12 @@ document.addEventListener('DOMContentLoaded', function() {
   quantityInput = document.getElementById('quantity');
   unitPriceInput = document.getElementById('unit-price');
   sellingPriceInput = document.getElementById('selling-price');
-  branchInput = document.getElementById('branch');
   // backwards compatibility alias
   totalAmountInput = sellingPriceInput;
-
-  console.log('Form found:', !!procurementForm);
-  console.log('All form inputs found:', {
-    supplierName: !!supplierNameInput,
-    supplierContact: !!supplierContactInput,
-    purchaseDate: !!purchaseDateInput,
-    invoiceNumber: !!invoiceNumberInput,
-    productName: !!productNameInput,
-    productCategory: !!productCategoryInput,
-    quantity: !!quantityInput,
-    unitPrice: !!unitPriceInput,
-    totalAmount: !!totalAmountInput
-  });
 
   // Add form submission handler
   if (procurementForm) {
     procurementForm.addEventListener('submit', handleFormSubmit);
-    console.log('Form submission handler attached');
-  } else {
-    console.error('Form not found! Check if .form-box exists in HTML');
   }
 
   // Setup auto-calculation
@@ -98,9 +78,6 @@ async function handleFormSubmit(e) {
       }
     }
 
-    console.log('Payment method:', paymentMethod);
-    console.log('Payment status:', paymentStatus);
-
     // Validate required fields with rules
     const namePattern = /^[A-Za-z0-9 ]+$/;
     const typePattern = /^[A-Za-z ]{2,}$/;
@@ -143,10 +120,7 @@ async function handleFormSubmit(e) {
       showAlert('Cost must be numeric and at least 5 digits (>=10000)', 'error');
       return;
     }
-    if (!branchInput.value) {
-      showAlert('Please select a branch', 'error');
-      return;
-    }
+    // Branch is not validated client-side — it is enforced server-side from JWT.
 
     // Calculate selling price if empty
     let sellingPrice = sellingPriceInput.value;
@@ -154,7 +128,9 @@ async function handleFormSubmit(e) {
       sellingPrice = parseFloat(quantityInput.value) * parseFloat(unitPriceInput.value);
     }
 
-    // Prepare form data
+    // FIXED (LOGIC-03 / BRANCH-01): Branch is no longer sent from the client.
+    // The server reads branch from the JWT (req.user.branch), so including it here
+    // would be redundant and could allow branch spoofing if the server were misconfigured.
     const formData = {
       supplier_name: supplierNameInput.value,
       supplier_contact: supplierContactInput.value,
@@ -166,27 +142,17 @@ async function handleFormSubmit(e) {
       quantity: parseFloat(quantityInput.value),
       unit_price: parseFloat(unitPriceInput.value),
       selling_price: parseFloat(sellingPrice),
-      branch: branchInput.value,
       payment_method: paymentMethod,
       payment_status: paymentStatus
     };
 
-    console.log('Submitting procurement form:', formData);
-
-    // Get token from localStorage (stored during login as 'token')
     const token = localStorage.getItem('token');
-    
     if (!token) {
       showAlert('Please login first', 'error');
-      console.error('No auth token found in localStorage');
       window.location.href = '/loginform/html/login.html';
       return;
     }
 
-    console.log('Auth token found:', token.substring(0, 20) + '...');
-
-    // Make API request
-    console.log(`Making API request to: ${API_BASE_URL}/procurement`);
     const response = await fetch(`${API_BASE_URL}/procurement`, {
       method: 'POST',
       headers: {
@@ -196,19 +162,13 @@ async function handleFormSubmit(e) {
       body: JSON.stringify(formData)
     });
 
-    console.log('Response status:', response.status);
-    console.log('Response headers:', response.headers);
-
     const result = await response.json();
-    console.log('Response data:', result);
 
     if (!response.ok) {
       throw new Error(result.message || 'Failed to submit procurement form');
     }
 
-    // Success handling
     showAlert('Procurement record created successfully!', 'success');
-    console.log('Procurement created:', result.data);
 
     // Reset form
     procurementForm.reset();
@@ -300,26 +260,16 @@ function showAlert(message, type = 'info') {
 async function fetchProcurementRecords() {
   try {
     const token = localStorage.getItem('token');
-
-    if (!token) {
-      console.log('No auth token found');
-      return;
-    }
+    if (!token) return;
 
     const response = await fetch(`${API_BASE_URL}/procurement`, {
       method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
+      headers: { 'Authorization': `Bearer ${token}` }
     });
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch procurement records');
-    }
+    if (!response.ok) throw new Error('Failed to fetch procurement records');
 
     const result = await response.json();
-    console.log('Procurement records:', result.data);
-    
     return result.data;
 
   } catch (error) {

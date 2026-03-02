@@ -1,4 +1,5 @@
-const { default: mongoose } = require("mongoose");
+// FIXED: Use standard CommonJS require (not { default: mongoose } ES-module interop)
+const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -20,7 +21,8 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ["Manager", "Sales-agent", "Director"],
-    default: "sales agent",
+    // FIXED: default was "sales agent" (space, not in enum) → now valid enum value
+    default: "Sales-agent",
     required: true
   },
   branch: {
@@ -41,6 +43,6 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-const UserModel = mongoose.model('User', userSchema)
+const UserModel = mongoose.model('User', userSchema);
 
-module.exports = UserModel
+module.exports = UserModel;

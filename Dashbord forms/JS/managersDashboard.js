@@ -1,5 +1,12 @@
 const API_BASE_URL = 'http://localhost:3000';
 
+// ADDED: XSS guard — server-sourced strings escaped before innerHTML injection
+function escHtml(str) {
+  return String(str === null || str === undefined ? '' : str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('token');
   if (!token) {
@@ -60,12 +67,14 @@ function renderTable(items) {
     return;
   }
 
+  // FIXED (SECURITY-08 / XSS): item.itemName and item.category were injected raw.
+  // A stored payload in either field would execute. Now escaped with escHtml().
   tbody.innerHTML = items.map(item => {
     const { label, cls } = getStatus(item.stockKg);
     return `
       <tr>
-        <td>${item.itemName}</td>
-        <td>${item.category || '-'}</td>
+        <td>${escHtml(item.itemName)}</td>
+        <td>${escHtml(item.category || '-')}</td>
         <td>${formatNumber(item.stockKg)}</td>
         <td>${formatCurrency(item.costPerKg)}</td>
         <td>${formatCurrency(item.salePricePerKg)}</td>

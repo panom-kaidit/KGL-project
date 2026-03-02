@@ -1,37 +1,40 @@
 const mongoose = require("mongoose");
-const Sale = require("../models/sales");
-const User = require("../models/User");
-
-// ── Helpers ────────────────────────────────────────────────────────────────────
+const Sale     = require("../models/sales");
+const User     = require("../models/User");
 
 function todayStr() {
   return new Date().toISOString().split("T")[0];
 }
 
-/**
- * Build the recordedBy filter based on the caller's role:
- *   Sales-agent → only their own credit sales
- *   Manager     → all credit sales in their branch
- *   Director    → all credit sales (no filter)
- */
+// FIXED (SECURITY-05): Previously, if a Manager had no branch, this returned {}
+// (empty filter) meaning the Manager could see ALL credit sales from all branches.
+// Now we return a filter that matches nothing, and surface a 400 to the caller.
 async function buildScopeFilter(user) {
   if (user.role === "Sales-agent") {
     return { recordedBy: new mongoose.Types.ObjectId(user.id) };
   }
 
   if (user.role === "Manager") {
-    if (!user.branch) return {};
-    const agents = await User.find({ branch: user.branch }).select("_id").lean();
-    return { recordedBy: { $in: agents.map((a) => a._id) } };
+    if (!user.branch) {
+      // Return a filter that matches no document instead of leaking all data
+      return { _id: new mongoose.Types.ObjectId("000000000000000000000000") };
+    }
+    // FIXED: Uses sale.branch directly (new field) — no longer does
+    // indirect lookup via agent IDs which breaks on agent reassignment/deletion
+    return { branch: user.branch };
   }
 
-  // Director or any other privileged role sees everything
+  // Director sees everything
   return {};
 }
 
-// ── GET /credits — list all active (pending / partial) credit sales ────────────
+// ── GET /credits ──────────────────────────────────────────────────────────────
 exports.getCreditSales = async (req, res) => {
   try {
+    if (req.user.role === "Manager" && !req.user.branch) {
+      return res.status(400).json({ message: "Your account has no branch assigned." });
+    }
+
     const scopeFilter = await buildScopeFilter(req.user);
 
     const credits = await Sale.find({
@@ -45,13 +48,17 @@ exports.getCreditSales = async (req, res) => {
 
     return res.status(200).json({ count: credits.length, data: credits });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
-// ── GET /credits/all — list ALL credit sales including paid (audit view) ───────
+// ── GET /credits/all ──────────────────────────────────────────────────────────
 exports.getAllCreditSales = async (req, res) => {
   try {
+    if (req.user.role === "Manager" && !req.user.branch) {
+      return res.status(400).json({ message: "Your account has no branch assigned." });
+    }
+
     const scopeFilter = await buildScopeFilter(req.user);
 
     const credits = await Sale.find({ saleType: "credit", ...scopeFilter })
@@ -61,11 +68,11 @@ exports.getAllCreditSales = async (req, res) => {
 
     return res.status(200).json({ count: credits.length, data: credits });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
-// ── GET /credits/:id — single credit sale detail ──────────────────────────────
+// ── GET /credits/:id ──────────────────────────────────────────────────────────
 exports.getCreditSaleById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -84,98 +91,103 @@ exports.getCreditSaleById = async (req, res) => {
 
     return res.status(200).json({ data: sale });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
-// ── PATCH /credits/:id/pay — process a payment ────────────────────────────────
-/**
- * Business rules:
- *  1. Sale must exist and be a credit type.
- *  2. Sale must not already be fully paid.
- *  3. paymentAmount must be a positive number.
- *  4. paymentAmount must NOT exceed remaining amountDue (no overpayment).
- *  5. After deducting, if amountDue reaches 0 → status = "paid".
- *     Otherwise → status = "partial".
- *  6. Every payment is appended to paymentHistory (audit log).
- *  7. The record is NEVER deleted — soft-close via status="paid".
- */
+// ── PATCH /credits/:id/pay — process a payment (atomic) ──────────────────────
 exports.makePayment = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id }           = req.params;
     const { paymentAmount } = req.body;
 
-    // ── 1. Validate MongoDB ObjectId ──────────────────────────────────────────
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid sale ID" });
     }
 
-    // ── 2. Validate payment amount ────────────────────────────────────────────
     const amount = Number(paymentAmount);
     if (!paymentAmount || isNaN(amount) || amount <= 0) {
       return res.status(400).json({ message: "Payment amount must be greater than 0" });
     }
 
-    // Round to 2 decimal places to avoid floating-point drift
     const roundedAmount = Math.round(amount * 100) / 100;
 
-    // ── 3. Fetch the sale ─────────────────────────────────────────────────────
-    const sale = await Sale.findById(id);
-    if (!sale) {
-      return res.status(404).json({ message: "Credit sale not found" });
-    }
+    // FIXED (LOGIC-06 — race condition): Previously this was a read-then-write
+    // pattern: fetch sale → compute new balance → update. Two simultaneous
+    // requests could both pass the balance check and both deduct, causing
+    // over-deduction beyond the original amountDue.
+    //
+    // FIX: Use a single atomic findOneAndUpdate with an aggregation pipeline
+    // (MongoDB 4.2+). The filter condition `amountDue: { $gte: roundedAmount }`
+    // acts as an atomic guard — MongoDB checks AND updates in one operation.
+    // If the condition fails, no update occurs and null is returned.
+    const updated = await Sale.findOneAndUpdate(
+      {
+        _id:      id,
+        saleType: "credit",
+        status:   { $in: ["pending", "partial"] },
+        amountDue: { $gte: roundedAmount }  // atomic overpayment guard
+      },
+      [
+        // Aggregation pipeline update — computes new values atomically
+        {
+          $set: {
+            amountDue: { $subtract: ["$amountDue", roundedAmount] }
+          }
+        },
+        {
+          $set: {
+            // Determine new status based on the updated amountDue
+            status: {
+              $cond: {
+                if:   { $lte: ["$amountDue", 0] },
+                then: "paid",
+                else: "partial"
+              }
+            },
+            paymentHistory: {
+              $concatArrays: [
+                "$paymentHistory",
+                [{
+                  amount:     roundedAmount,
+                  date:       todayStr(),
+                  recordedBy: new mongoose.Types.ObjectId(req.user.id)
+                }]
+              ]
+            }
+          }
+        }
+      ],
+      // Use returnDocument:'after' to return the updated document (replaces new:true).
+      { returnDocument: "after", runValidators: true }
+    ).lean();
 
-    // ── 4. Ensure it's actually a credit sale ─────────────────────────────────
-    if (sale.saleType !== "credit") {
-      return res.status(400).json({ message: "This record is not a credit sale" });
-    }
+    if (!updated) {
+      // The atomic update failed — determine the specific reason
+      const sale = await Sale.findById(id).lean();
+      if (!sale)                         return res.status(404).json({ message: "Credit sale not found" });
+      if (sale.saleType !== "credit")    return res.status(400).json({ message: "This record is not a credit sale" });
+      if (sale.status   === "paid")      return res.status(400).json({ message: "This credit sale is already fully paid" });
+      if ((sale.amountDue || 0) <= 0)   return res.status(400).json({ message: "This credit sale is already fully paid" });
 
-    // ── 5. Guard: already fully paid ─────────────────────────────────────────
-    if (sale.status === "paid" || sale.amountDue <= 0) {
-      return res.status(400).json({ message: "This credit sale is already fully paid" });
-    }
-
-    // ── 6. Guard: no overpayment ──────────────────────────────────────────────
-    if (roundedAmount > sale.amountDue) {
       return res.status(400).json({
-        message: `Payment of ${roundedAmount} exceeds remaining balance of ${sale.amountDue}. Overpayment is not allowed.`,
+        message:   `Payment of ${roundedAmount} exceeds remaining balance of ${sale.amountDue}. Overpayment is not allowed.`,
         amountDue: sale.amountDue
       });
     }
 
-    // ── 7. Compute new balance and status ─────────────────────────────────────
-    const newAmountDue = Math.round((sale.amountDue - roundedAmount) * 100) / 100;
-    const newStatus    = newAmountDue === 0 ? "paid" : "partial";
-
-    // ── 8. Atomic update (findByIdAndUpdate keeps the operation thread-safe) ──
-    const updated = await Sale.findByIdAndUpdate(
-      id,
-      {
-        $set:  { amountDue: newAmountDue, status: newStatus },
-        $push: {
-          paymentHistory: {
-            amount:     roundedAmount,
-            date:       todayStr(),
-            recordedBy: req.user.id
-          }
-        }
-      },
-      { new: true, runValidators: true }
-    ).lean();
-
-    // ── 9. Build response ─────────────────────────────────────────────────────
-    const message =
-      newStatus === "paid"
-        ? "Payment successful. Credit sale has been fully settled."
-        : `Payment of ${roundedAmount} received. Remaining balance: ${newAmountDue}`;
+    const message = updated.status === "paid"
+      ? "Payment successful. Credit sale has been fully settled."
+      : `Payment of ${roundedAmount} received. Remaining balance: ${updated.amountDue}`;
 
     return res.status(200).json({
       message,
-      status:    newStatus,
-      amountDue: newAmountDue,
+      status:    updated.status,
+      amountDue: updated.amountDue,
       data:      updated
     });
+
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ message: "Server error" });
   }
 };

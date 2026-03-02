@@ -48,35 +48,16 @@ form.addEventListener("submit", async function (event) {
         // Extract role and other info from token
         const decodedToken = decodeToken(data.token);
         let userRole = decodedToken ? decodedToken.role : null;
-        let userId = decodedToken ? decodedToken.id : null;
         let userName = decodedToken ? decodedToken.name : null;
 
-        // Store role and name
+        // Store role, name, and branch
+        // FIXED (LOGIC-04): Previously made a second GET /users/:id request just to
+        // read the branch, which is already present in the JWT payload. Removed the
+        // extra round-trip; branch is now read directly from the decoded token.
         if (userRole) localStorage.setItem("userRole", userRole);
         if (userName) localStorage.setItem("userName", userName);
-
-        // Fetch user details to get branch info
-        if (userId) {
-          try {
-            const userResponse = await fetch(`http://localhost:3000/users/${userId}`, {
-              method: "GET",
-              headers: {
-                "Authorization": `Bearer ${data.token}`,
-                "Content-Type": "application/json"
-              }
-            });
-
-            if (userResponse.ok) {
-              const userData = await userResponse.json();
-              if (userData.branch) {
-                localStorage.setItem("userBranch", userData.branch);
-                console.log("User branch stored:", userData.branch);
-              }
-            }
-          } catch (error) {
-            console.error("Error fetching user branch:", error);
-            // Continue anyway, branch might be optional
-          }
+        if (decodedToken && decodedToken.branch) {
+          localStorage.setItem("userBranch", decodedToken.branch);
         }
 
         alert("Login successful!");

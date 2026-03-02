@@ -1,121 +1,187 @@
-const express = require("express");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const express       = require("express");
+const bcrypt        = require("bcryptjs");
+const jwt           = require("jsonwebtoken");
+const User          = require("../models/User");
 const authMiddleware = require("../middlewares/authMiddleware");
-const authRole = require("../middlewares/rbaMiddleware");
+const authorizeRole  = require("../middlewares/rbaMiddleware");
 const { getBranchUsers } = require("../controllers/userController");
 
 const router = express.Router();
 
-// creation of new users.
-router.post("/register", async (req, res) => {
+// ── POST /users/register ─────────────────────────────────────────────────────
+// FIXED (SECURITY-01): Was completely unprotected — any anonymous user could
+// create an account with any role, including Director.
+// Now requires:
+//   - Director: can create any user with any role and branch
+//   - Manager: can only create Sales-agents, branch is forced to their own branch
+//   - Others: 403
+router.post("/register", authMiddleware, async (req, res) => {
   try {
-    const { name, email, password, role, branch, phone, bio } = req.body;
+    const caller = req.user;
 
-    // Check if user exists
+    if (!["Director", "Manager"].includes(caller.role)) {
+      return res.status(403).json({ message: "Access denied: only Directors and Managers can register users" });
+    }
+
+    const { name, email, password, role, phone, bio } = req.body;
+    let   { branch } = req.body;
+
+    // Managers can only create Sales-agents for their own branch
+    if (caller.role === "Manager") {
+      if (role && role !== "Sales-agent") {
+        return res.status(403).json({ message: "Managers can only register Sales-agents" });
+      }
+      // Force branch to manager's own branch — cannot assign to another branch
+      branch = caller.branch;
+    }
+
+    // Basic input validation
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "name, email, and password are required" });
+    }
+    if (password.length < 8) {
+      return res.status(400).json({ message: "Password must be at least 8 characters" });
+    }
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
+    const salt           = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = new User({
       name,
       email,
       password: hashedPassword,
-      role,
+      role:   role || "Sales-agent",
       branch,
-      phone: phone || "",
-      bio: bio || ""
+      phone:  phone || "",
+      bio:    bio   || ""
     });
 
     await newUser.save();
-
-    res.status(201).json({ message: "User created successfully" });
+    return res.status(201).json({ message: "User created successfully" });
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ message: "Server error" });
   }
 });
 
-// when loging in
+// ── POST /users/login ────────────────────────────────────────────────────────
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    if (!email || !password) {
+      return res.status(400).json({ message: "email and password are required" });
+    }
 
+    const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: "User not found" });
+      // Use the same message for both "not found" and "wrong password" to
+      // prevent user enumeration attacks
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid password" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // Generate token which will be used as the pass key
     const token = jwt.sign(
       { id: user._id, role: user.role, name: user.name, branch: user.branch || "" },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
-    res.status(200).json({
-      message: "Login successful",
-      token
-    });
+    return res.status(200).json({ message: "Login successful", token });
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ message: "Server error" });
   }
 });
 
-// GET /users/branch — manager sees only their own branch's users
-// Branch is read from the JWT (req.user.branch), never from the request body/query.
-// Must be declared before /:id to avoid the wildcard capturing "branch" as an id.
-router.get("/branch", authMiddleware, authRole("Manager"), getBranchUsers);
+// ── GET /users/branch ────────────────────────────────────────────────────────
+// Manager sees only their own branch's users (branch from JWT, never from query).
+// Must be before /:id to prevent "branch" being captured as an id.
+router.get("/branch", authMiddleware, authorizeRole("Manager"), getBranchUsers);
 
-// Update user bio and profile picture
+// ── PUT /users/:id ───────────────────────────────────────────────────────────
+// FIXED (SECURITY-03): Was only authMiddleware with no ownership check.
+// Any authenticated user could update any other user's profile (IDOR).
+// Now: a user may only update their own profile; Directors may update anyone.
 router.put("/:id", authMiddleware, async (req, res) => {
   try {
+    const targetId = req.params.id;
+    const caller   = req.user;
+
+    // Ownership check — only self or Director
+    if (targetId !== String(caller.id) && caller.role !== "Director") {
+      return res.status(403).json({ message: "Access denied: you may only update your own profile" });
+    }
+
     const { bio, profilePicture } = req.body;
 
     const updateFields = {};
-    if (bio !== undefined) updateFields.bio = bio;
+    if (bio !== undefined)            updateFields.bio            = bio;
     if (profilePicture !== undefined) updateFields.profilePicture = profilePicture;
 
     const user = await User.findByIdAndUpdate(
-      req.params.id,
+      targetId,
       { $set: updateFields },
-      { new: true }
+      // Use returnDocument:'after' to return the updated document (replaces new:true).
+      { returnDocument: "after" }
     ).select("-password");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json(user);
+    return res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ message: "Server error" });
   }
 });
 
-// Get user details by ID
+// ── GET /users/:id ───────────────────────────────────────────────────────────
+// FIXED (SECURITY-04): Was only authMiddleware — any authenticated user could
+// read any other user's full profile by guessing ObjectIds (IDOR).
+// Now: a user may only read their own profile, or a Manager reads branch users
+// (handled by /branch), or a Director reads anyone.
 router.get("/:id", authMiddleware, async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).select("-password");
+    const targetId = req.params.id;
+    const caller   = req.user;
+
+    // Allow: own profile, or Director, or Manager reading same-branch user
+    const isSelf     = String(targetId) === String(caller.id);
+    const isDirector = caller.role === "Director";
+
+    if (!isSelf && !isDirector) {
+      // Manager may read users in their own branch — verify the target is in branch
+      if (caller.role === "Manager") {
+        const target = await User.findById(targetId).select("branch").lean();
+        if (!target) {
+          return res.status(404).json({ message: "User not found" });
+        }
+        if (target.branch !== caller.branch) {
+          return res.status(403).json({ message: "Access denied: user is not in your branch" });
+        }
+      } else {
+        return res.status(403).json({ message: "Access denied" });
+      }
+    }
+
+    const user = await User.findById(targetId).select("-password");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.status(200).json(user);
+    return res.status(200).json(user);
+
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ message: "Server error" });
   }
 });
 

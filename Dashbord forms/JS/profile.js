@@ -1,16 +1,19 @@
 const API_BASE = 'http://localhost:3000';
 
-function getToken() {
-  return localStorage.getItem('token');
-}
+function getToken()  { return localStorage.getItem('token'); }
 
 function decodeToken(token) {
-  try {
-    const payload = token.split('.')[1];
-    return JSON.parse(atob(payload));
-  } catch {
-    return null;
-  }
+  try   { return JSON.parse(atob(token.split('.')[1])); }
+  catch { return null; }
+}
+
+// ADDED: XSS guard — used instead of raw innerHTML with server data
+function escHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 let currentUserId = null;
@@ -35,9 +38,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   try {
     const response = await fetch(`${API_BASE}/users/${currentUserId}`, {
-      method: 'GET',
+      method:  'GET',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type':  'application/json',
         'Authorization': 'Bearer ' + token
       }
     });
@@ -49,12 +52,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     console.error('Error fetching user details:', error);
     displayUserProfile({
-      name: decodedToken.name || 'Unknown User',
-      email: 'Not available',
-      role: decodedToken.role || 'User',
-      phone: 'Not available',
-      branch: 'Not available',
-      bio: '',
+      name:           decodedToken.name  || 'Unknown User',
+      email:          'Not available',
+      role:           decodedToken.role  || 'User',
+      phone:          'Not available',
+      branch:         decodedToken.branch || 'Not available',
+      bio:            '',
       profilePicture: ''
     });
   }
@@ -69,16 +72,31 @@ function displayUserProfile(user) {
 
   const roleEl = document.querySelector('.role');
   if (roleEl) {
-    roleEl.textContent = user.role === 'Sales-agent' ? 'Sales Agent' : user.role || 'User';
+    roleEl.textContent = user.role === 'Sales-agent' ? 'Sales Agent' : (user.role || 'User');
   }
 
+  // FIXED (SECURITY-07 / XSS): Was using innerHTML with raw server data:
+  //   profileInfo.innerHTML = `<p><strong>Branch:</strong> ${user.branch}</p>...`
+  // If branch/email/phone contained <script> or <img onerror=...> it would execute.
+  // Now builds DOM nodes with textContent — no HTML parsing of user data.
   const profileInfo = document.querySelector('.profile--info');
   if (profileInfo) {
-    profileInfo.innerHTML = `
-      <p><strong>Branch:</strong> ${user.branch || 'Not specified'}</p>
-      <p><strong>Email:</strong> ${user.email || 'Not available'}</p>
-      <p><strong>Phone:</strong> ${user.phone || 'Not available'}</p>
-    `;
+    profileInfo.innerHTML = '';
+
+    const fields = [
+      { label: 'Branch', value: user.branch || 'Not specified' },
+      { label: 'Email',  value: user.email  || 'Not available' },
+      { label: 'Phone',  value: user.phone  || 'Not available' }
+    ];
+
+    fields.forEach(({ label, value }) => {
+      const p      = document.createElement('p');
+      const strong = document.createElement('strong');
+      strong.textContent = label + ':';
+      p.appendChild(strong);
+      p.appendChild(document.createTextNode(' ' + value));
+      profileInfo.appendChild(p);
+    });
   }
 
   const bioParagraph = document.querySelector('.profile--bio p');
@@ -94,7 +112,7 @@ function displayUserProfile(user) {
 
 function setupProfilePictureUpload() {
   const avatarWrapper = document.querySelector('.profile--avatar-wrapper');
-  const fileInput = document.getElementById('profile-pic-input');
+  const fileInput     = document.getElementById('profile-pic-input');
   if (!avatarWrapper || !fileInput) return;
 
   avatarWrapper.addEventListener('click', () => fileInput.click());
@@ -108,26 +126,19 @@ function setupProfilePictureUpload() {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const base64 = e.target.result;
-
-      // Update UI immediately
+    const reader   = new FileReader();
+    reader.onload  = async (e) => {
+      const base64   = e.target.result;
       const profileImg = document.querySelector('.profile--avatar-wrapper img');
       if (profileImg) profileImg.src = base64;
 
-      // Save to backend
       try {
         const token = getToken();
-        const res = await fetch(`${API_BASE}/users/${currentUserId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-          },
-          body: JSON.stringify({ profilePicture: base64 })
+        const res   = await fetch(`${API_BASE}/users/${currentUserId}`, {
+          method:  'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body:    JSON.stringify({ profilePicture: base64 })
         });
-
         if (!res.ok) throw new Error('Failed to save profile picture');
         showSaveMessage('Profile picture updated!');
       } catch (err) {
@@ -140,11 +151,11 @@ function setupProfilePictureUpload() {
 }
 
 function setupBioEdit() {
-  const editBtn = document.getElementById('bio-edit-btn');
+  const editBtn      = document.getElementById('bio-edit-btn');
   const bioParagraph = document.querySelector('.profile--bio p');
-  const bioControls = document.getElementById('bio-edit-controls');
-  const bioTextarea = document.getElementById('bio-textarea');
-  const saveBioBtn = document.getElementById('bio-save-btn');
+  const bioControls  = document.getElementById('bio-edit-controls');
+  const bioTextarea  = document.getElementById('bio-textarea');
+  const saveBioBtn   = document.getElementById('bio-save-btn');
   const cancelBioBtn = document.getElementById('bio-cancel-btn');
 
   if (!editBtn || !bioParagraph || !bioControls || !bioTextarea) return;
@@ -167,24 +178,18 @@ function setupBioEdit() {
 
   saveBioBtn.addEventListener('click', async () => {
     const newBio = bioTextarea.value.trim();
-
     try {
       const token = getToken();
-      const res = await fetch(`${API_BASE}/users/${currentUserId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token
-        },
-        body: JSON.stringify({ bio: newBio })
+      const res   = await fetch(`${API_BASE}/users/${currentUserId}`, {
+        method:  'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body:    JSON.stringify({ bio: newBio })
       });
-
       if (!res.ok) throw new Error('Failed to save bio');
-
-      bioParagraph.textContent = newBio || 'No bio yet. Click Edit to add one.';
+      bioParagraph.textContent   = newBio || 'No bio yet. Click Edit to add one.';
       bioParagraph.style.display = '';
-      editBtn.style.display = '';
-      bioControls.style.display = 'none';
+      editBtn.style.display      = '';
+      bioControls.style.display  = 'none';
       showSaveMessage('Bio saved!');
     } catch (err) {
       console.error(err);
@@ -196,11 +201,11 @@ function setupBioEdit() {
 function showSaveMessage(msg) {
   let msgEl = document.querySelector('.profile--save-msg');
   if (!msgEl) {
-    msgEl = document.createElement('p');
+    msgEl           = document.createElement('p');
     msgEl.className = 'profile--save-msg';
-    document.querySelector('.profile--card').appendChild(msgEl);
+    const card = document.querySelector('.profile--card');
+    if (card) card.appendChild(msgEl);
   }
   msgEl.textContent = msg;
   setTimeout(() => { msgEl.textContent = ''; }, 3000);
 }
-
