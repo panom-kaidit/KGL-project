@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Director Dashboard | Karibu</title>
+    <title>User Management | Director Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/Dashbord forms/DirectorsDashboard/directorsDashboard.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/Dashbord forms/CSS/layout.css">
 </head>
 <body>
-
+    <div class="layout">
     <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="logo">
@@ -18,7 +18,7 @@
 
         <ul class="nav_menu">
             <li>
-                <a href="/Dashbord forms/DirectorsDashboard/directorsDashboard.html" >
+                <a href="/Dashbord forms/DirectorsDashboard/directorsDashboard.html">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
@@ -48,7 +48,7 @@
                 </a>
             </li>
             <li>
-                <a href="/Dashbord forms/DirectorsDashboard/usermanegementDash.html"class="active">
+                <a href="/Dashbord forms/DirectorsDashboard/usermanegementDash.html" class="active">
                     <i class="fas fa-users icon blue"></i>
                     <span>User Management</span>
                 </a>
@@ -67,3 +67,51 @@
             </li>
         </ul>
     </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <div class="top-bar">
+            <h2>User Management</h2>
+            <div class="user-info">
+                <span>Welcome, Director</span>
+                <img src="/images/logo/karibu icon.png" alt="Director">
+            </div>
+        </div>
+
+        <div class="table-container">
+            <h3>System Users</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Branch</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Jane Doe</td>
+                        <td>Manager</td>
+                        <td>Kampala Main</td>
+                        <td style="color: green;">Active</td>
+                    </tr>
+                    <tr>
+                        <td>John Smith</td>
+                        <td>Sales Agent</td>
+                        <td>Jinja Road</td>
+                        <td style="color: green;">Active</td>
+                    </tr>
+                    <tr>
+                        <td>Sarah Lee</td>
+                        <td>Manager</td>
+                        <td>Entebbe</td>
+                        <td style="color: orange;">On Leave</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    </div>
+</body>
+</html>

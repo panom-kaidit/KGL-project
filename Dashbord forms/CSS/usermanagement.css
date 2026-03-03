@@ -5,7 +5,8 @@
    ============================================================ */
 
 /* ── Main content area ──────────────────────────────────────── */
-main {
+/* Use the shared layout content container so only main content scrolls */
+.layout > .content {
   flex: 1;
   padding: 30px 28px;
   max-width: 1300px;
@@ -342,7 +343,7 @@ main {
     padding: 11px 10px;
   }
 
-  main {
+  .layout > .content {
     padding: 20px 18px;
   }
 }

@@ -60,9 +60,9 @@ function setupControls() {
 function applyFilters() {
   const rawQuery = document.getElementById('searchInput').value.trim();
 
-  // FIXED (FRONT-05 / ReDoS): User input was passed directly to new RegExp()
-  // allowing patterns like ((a+)+) to freeze the browser tab. Now escaped first.
-  const safeQuery = rawQuery.replace(/[.*+?^${}()|[\]\]/g, '\$&');
+  // FIXED: The regex was missing a properly escaped backslash in the character class.
+  // This safely escapes regex special characters before building new RegExp().
+  const safeQuery = rawQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const pattern   = safeQuery ? new RegExp(safeQuery, 'i') : null;
 
   const filtered = pattern
