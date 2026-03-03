@@ -339,25 +339,7 @@ body {
 .empty-state i { font-size: 40px; margin-bottom: 12px; display: block; }
 
 /* ── RESPONSIVE ────────────────────────────────────────────────────────────── */
-@media (max-width: 1024px) {
-  .cards { grid-template-columns: repeat(2, 1fr); }
-}
 
-@media (max-width: 768px) {
-  body { flex-direction: column; }
 
-  .sidebar {
-    width: 100%;
-    padding: 14px 20px;
-  }
 
-  .nav_menu { display: flex; flex-wrap: wrap; gap: 8px; }
-  .nav_menu li { margin: 0; }
-  .nav_menu a  { padding: 8px 12px; font-size: 13px; }
 
-  .main-content { padding: 16px; }
-
-  .cards { grid-template-columns: 1fr; }
-
-  .product-grid { grid-template-columns: 1fr; }
-}

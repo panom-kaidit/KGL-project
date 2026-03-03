@@ -50,18 +50,5 @@
 
 /* ================= MOBILE RESPONSIVENESS ================= */
 /* Adjustments for tablets and phones */
-@media (max-width: 768px) {
-    
-    /* Stack charts vertically on small screens */
-    .charts--wrapper {
-        grid-template-columns: 1fr;
-    }
-    
-    .stats--container {
-        padding: 10px;
-    }
-    
-    .chart--card {
-        padding: 15px;
-    }
-}
+
+

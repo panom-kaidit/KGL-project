@@ -333,39 +333,7 @@
 }
 
 /* ── Responsive ─────────────────────────────────────────────── */
-@media (max-width: 1024px) {
-  .procurement-table {
-    font-size: 13px;
-  }
 
-  .procurement-table thead th,
-  .procurement-table tbody td {
-    padding: 11px 10px;
-  }
 
-  .layout > .content {
-    padding: 20px 18px;
-  }
-}
 
-@media (max-width: 768px) {
-  /* Hide phone column on mobile */
-  .procurement-table thead th:nth-child(6),
-  .procurement-table tbody td:nth-child(6) {
-    display: none;
-  }
 
-  .um-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .controls-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .sort-wrapper {
-    justify-content: flex-start;
-  }
-}

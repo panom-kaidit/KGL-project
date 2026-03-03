@@ -141,29 +141,10 @@ body {
 }
 
 /* Responsive: single column on small screens */
-@media (max-width: 700px) {
-    .login-container {
-        width: 95%;
-    }
 
-    .form-box {
-        grid-template-columns: 1fr;
-    }
-
-    .form-header,
-    .submit-btn,
-    .form-group:last-of-type {
-        grid-column: span 1;
-    }
-}
 
 /* Extra fix for very small screens */
-@media (max-width: 700px) {
-    .login-container {
-        width: 90%;
-        margin: 0 auto;
-    }
-}
+
 
 /* ===== SEARCH & SORT CONTROLS ===== */
 
@@ -440,43 +421,9 @@ main {
 }
 
 /* Responsive design */
-@media (max-width: 1024px) {
-    .procurement-table {
-        font-size: 13px;
-    }
 
-    .procurement-table thead th,
-    .procurement-table tbody td {
-        padding: 10px 8px;
-    }
 
-    main {
-        padding: 20px 15px;
-    }
-}
 
-@media (max-width: 768px) {
-    /* Hide less important columns on mobile */
-    .procurement-table thead th:nth-child(6),
-    .procurement-table thead th:nth-child(7),
-    .procurement-table tbody td:nth-child(6),
-    .procurement-table tbody td:nth-child(7) {
-        display: none;
-    }
-
-    .procurement-table {
-        font-size: 12px;
-    }
-
-    .btn {
-        padding: 10px 15px;
-        font-size: 13px;
-    }
-
-    .header h1 {
-        font-size: 22px;
-    }
-}
 
 /* user management message styles */
 .no-results.success {

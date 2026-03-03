@@ -68,8 +68,5 @@ button:hover {
 
 
 /* Mobile Responsiveness */
-@media (max-width: 480px) {
-    .container {
-        width: 90%;
-    }
-}
+
+

@@ -67,8 +67,5 @@ button:hover {
 }
 
 /* Mobile Responsiveness */
-@media (max-width: 480px) {
-    .reset-container {
-        width: 90%;
-    }
-}
+
+

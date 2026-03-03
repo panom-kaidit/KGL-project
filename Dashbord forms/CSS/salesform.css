@@ -202,24 +202,8 @@ tbody tr:hover {
 /* =========================
    RESPONSIVE (MOBILE)
 ========================= */
-@media (max-width: 700px) {
-    .login-container {
-        width: 95%;
-    }
 
-    .form-box {
-        grid-template-columns: 1fr;
-    }
-
-    .submit-btn {
-        grid-column: span 1;
-    }
-}
 
 /* Extra responsive fix */
-@media (max-width: 700px) {
-    .login-container {
-        width: 90%;
-        margin: 0 auto;
-    }
-}
+
+

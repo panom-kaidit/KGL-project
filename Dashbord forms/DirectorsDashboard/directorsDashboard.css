@@ -206,16 +206,5 @@ th {
 }
 
 /* RESPONSIVENESS */
-@media (max-width: 768px) {
-    .sidebar {
-        display: none; /* In a real app we'd add a toggle */
-    }
-    
-    .cards {
-        grid-template-columns: 1fr;
-    }
-    
-    .table-container {
-        overflow-x: auto;
-    }
-}
+
+

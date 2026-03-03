@@ -159,53 +159,8 @@
 
 
 /* ================= MOBILE RESPONSIVENESS ================= */
-@media (max-width: 768px) {
 
-    body {
-        overflow-x: hidden;
-    }
-
-    .sidebar {
-        position: fixed;
-        left: -260px;
-        top: 0;
-        width: 240px;
-        height: 100%;
-        z-index: 1000;
-    }
-
-    .sidebar.active {
-        left: 0;
-    }
-
-    .main--content {
-        width: 100%;
-        padding: 1rem;
-    }
-
-    .sidebar:hover {
-        width: 240px;
-    }
-
-    .nav_menu span {
-        opacity: 1;
-    }
-
-    .nav_menu a {
-        justify-content: flex-start;
-    }
-
-    .menu-toggle {
-        font-size: 1.5rem;
-        color: #1B5E20;
-        cursor: pointer;
-    }
-}
 
 /* Beginner Friendly: Resize profile card on mobile */
-@media (max-width: 768px) {
-    .profile--card {
-        width: 90%;
-        margin: 0 auto;
-    }
-}
+
+

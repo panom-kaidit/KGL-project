@@ -249,122 +249,13 @@ body {
 
 /* ================= MOBILE RESPONSIVENESS ================= */
 /* ================= TABLET (≤ 1024px) ================= */
-@media (max-width: 1024px) {
 
-  .sidebar {
-    width: 200px;
-  }
-
-  .logo img {
-    width: 100px;
-  }
-
-  .card--wrapper {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  }
-}
 
 
 /* ================= MOBILE & SMALL TABLETS (≤ 768px) ================= */
-@media (max-width: 768px) {
 
-  body {
-    flex-direction: column;
-  }
-
-  /* SIDEBAR BECOMES TOP NAV */
-  .sidebar {
-    position: relative;
-    width: 100%;
-    min-height: auto;
-    padding: 12px 16px;
-  }
-
-  .logo {
-    margin-bottom: 10px;
-  }
-
-  /* ORDERED TOP NAVIGATION */
-  .nav_menu {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    text-align: center;
-  }
-
-  .nav_menu li {
-    margin: 0;
-  }
-
-  .nav_menu a {
-    flex-direction: column;
-    justify-content: center;
-    gap: 6px;
-    padding: 10px 8px;
-    font-size: 13px;
-  }
-
-  .nav_menu i {
-    font-size: 20px;
-  }
-
-  .nav_menu span {
-    opacity: 1;
-    font-size: 12px;
-  }
-
-  /* MAIN CONTENT */
-  .main--content {
-    padding: 15px;
-  }
-
-  /* HEADER STACKS NICELY */
-  .header--wrapper {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 15px;
-  }
-
-  .user--info {
-    width: 100%;
-    justify-content: space-between;
-  }
-}
 
 
 /* ================= SMALL PHONES (≤ 480px) ================= */
-@media (max-width: 480px) {
 
-  /* TWO ITEMS PER ROW IN NAV */
-  .nav_menu {
-    grid-template-columns: repeat(2, 1fr);
-  }
 
-  /* HIDE SEARCH TO SAVE SPACE */
-  .search--box {
-    display: none;
-  }
-
-  .amount--value {
-    font-size: 18px;
-  }
-
-  .payment--card {
-    height: auto;
-  }
-
-  .icon {
-    width: 50px;
-    height: 50px;
-    font-size: 1.2rem;
-  }
-
-  h2 {
-    font-size: 1.2rem;
-  }
-
-  h3 {
-    font-size: 1rem;
-  }
-}

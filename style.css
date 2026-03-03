@@ -79,11 +79,7 @@ button:hover {
 /* =========================
    RESPONSIVE
 ========================= */
-@media (max-width: 480px) {
-    form {
-        width: 90%;
-    }
-}
+
 
 @keyframes bgSlide {
   0% {

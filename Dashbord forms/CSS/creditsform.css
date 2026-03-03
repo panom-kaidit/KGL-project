@@ -444,26 +444,5 @@ body {
 }
 
 /* ── Responsive ─────────────────────────────────────────────── */
-@media (max-width: 600px) {
-  .detail-grid {
-    grid-template-columns: 1fr;
-  }
 
-  .balance-row {
-    grid-template-columns: 1fr;
-  }
 
-  .search-row {
-    flex-direction: column;
-  }
-
-  .btn-row {
-    flex-direction: column;
-  }
-
-  .btn-primary,
-  .btn-secondary {
-    width: 100%;
-    text-align: center;
-  }
-}

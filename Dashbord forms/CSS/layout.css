@@ -84,30 +84,4 @@ body {
   overflow-x: hidden;
 }
 
-/* Simple responsive behavior: compact fixed sidebar */
-@media (max-width: 900px) {
-  .layout .sidebar {
-    width: var(--sidebar-width-compact);
-    padding: 14px 10px;
-  }
-
-  .layout .logo img {
-    width: 54px;
-  }
-
-  .layout .nav_menu a {
-    justify-content: center;
-  }
-
-  .layout .nav_menu span {
-    display: none;
-  }
-
-  .layout > .content,
-  .layout > .main-content,
-  .layout > .main--content,
-  .layout > main {
-    margin-left: var(--sidebar-width-compact);
-    width: calc(100% - var(--sidebar-width-compact));
-  }
-}
+/* Responsive rules moved to Dashbord forms/CSS/responsive.css */
