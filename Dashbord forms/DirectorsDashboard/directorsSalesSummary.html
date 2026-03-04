@@ -39,18 +39,6 @@
                 </a>
             </li>
             <li>
-                <a href="/Dashbord forms/DirectorsDashboard/directorsReports.html">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Reports</span>
-                </a>
-            </li>
-            <li>
-                <a href="/Dashbord forms/DirectorsDashboard/directorsAnalytics.html">
-                    <i class="fas fa-chart-pie"></i>
-                    <span>Analytics</span>
-                </a>
-            </li>
-            <li>
                 <a href="/Dashbord forms/DirectorsDashboard/usermanegementDash.html">
                     <i class="fas fa-users icon blue"></i>
                     <span>User Management</span>
@@ -63,7 +51,7 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="#" id="logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </a>
@@ -85,44 +73,38 @@
         <!-- FILTERS -->
         <div class="filters">
             <label>Date Range:</label>
-            <input type="date">
+            <input type="date" id="startDate">
             <span>to</span>
-            <input type="date">
+            <input type="date" id="endDate">
             
             <label>Branch:</label>
-            <select>
-                <option>All Branches</option>
-                <option>Kampala Main</option>
-                <option>Jinja Road</option>
-                <option>Entebbe</option>
+            <select id="branchFilter">
+                <option value="all">All Branches</option>
             </select>
             
             <label>Category:</label>
-            <select>
-                <option>All Categories</option>
-                <option>Cereals</option>
-                <option>Legumes</option>
-                <option>Flour</option>
+            <select id="categoryFilter">
+                <option value="all">All Categories</option>
             </select>
             
-            <button>Filter</button>
+            <button id="applyFiltersBtn">Filter</button>
         </div>
 
         <!-- SUMMARY CARDS -->
         <div class="cards">
-            <div class="card">
+            <div class="card green">
                 <h3>Total Sales Amount</h3>
-                <h1>UGX 4.5M</h1>
+                <h1 id="totalSalesAmount">Loading...</h1>
                 <p>Selected Period</p>
             </div>
-            <div class="card">
+            <div class="card yellow">
                 <h3>Transactions</h3>
-                <h1>450</h1>
+                <h1 id="totalTransactions">Loading...</h1>
                 <p>Count</p>
             </div>
-            <div class="card">
+            <div class="card darkgreen">
                 <h3>Avg. Sale Value</h3>
-                <h1>UGX 10,000</h1>
+                <h1 id="averageSaleValue">Loading...</h1>
                 <p>Per Transaction</p>
             </div>
         </div>
@@ -139,36 +121,17 @@
                         <th>% of Total</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="categoryBreakdownBody">
                     <tr>
-                        <td>Maize</td>
-                        <td>1,200</td>
-                        <td>UGX 2,400,000</td>
-                        <td>45%</td>
-                    </tr>
-                    <tr>
-                        <td>Beans</td>
-                        <td>800</td>
-                        <td>UGX 1,600,000</td>
-                        <td>30%</td>
-                    </tr>
-                    <tr>
-                        <td>Rice</td>
-                        <td>400</td>
-                        <td>UGX 1,000,000</td>
-                        <td>15%</td>
-                    </tr>
-                    <tr>
-                        <td>Soya</td>
-                        <td>200</td>
-                        <td>UGX 500,000</td>
-                        <td>10%</td>
+                        <td colspan="4" style="text-align:center;color:#999;">Loading sales data...</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
     </main>
+    <script src="/Dashbord forms/JS/directorsSalesSummary.js"></script>
+    <script src="/Dashbord forms/JS/logout.js"></script>
     </div>
 </body>
 </html>

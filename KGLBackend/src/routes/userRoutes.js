@@ -9,11 +9,11 @@ const { getBranchUsers } = require("../controllers/userController");
 const router = express.Router();
 
 // ── POST /users/register ─────────────────────────────────────────────────────
-// FIXED (SECURITY-01): Was completely unprotected — any anonymous user could
-// create an account with any role, including Director.
-// Now requires:
-//   - Director: can create any user with any role and branch
-//   - Manager: can only create Sales-agents, branch is forced to their own branch
+// FIXED (USER-MGMT LOGIC):
+//   - Director can ONLY create Managers.
+//   - Manager can ONLY create Sales-agents.
+//   - Manager branch is always forced to manager's own branch.
+//   - Manager cannot create users for other branches.
 //   - Others: 403
 router.post("/register", authMiddleware, async (req, res) => {
   try {
@@ -26,13 +26,24 @@ router.post("/register", authMiddleware, async (req, res) => {
     const { name, email, password, role, phone, bio } = req.body;
     let   { branch } = req.body;
 
-    // Managers can only create Sales-agents for their own branch
+    // Managers can only create Sales-agents for their own branch.
     if (caller.role === "Manager") {
       if (role && role !== "Sales-agent") {
         return res.status(403).json({ message: "Managers can only register Sales-agents" });
       }
-      // Force branch to manager's own branch — cannot assign to another branch
+      // Force branch to manager's own branch — cannot assign another branch.
       branch = caller.branch;
+    }
+
+    // Directors can only create Managers.
+    if (caller.role === "Director") {
+      if (role !== "Manager") {
+        return res.status(403).json({ message: "Directors can only register Managers" });
+      }
+      // Director must assign a branch to the new Manager.
+      if (!branch) {
+        return res.status(400).json({ message: "Branch is required when registering a Manager" });
+      }
     }
 
     // Basic input validation
@@ -55,10 +66,10 @@ router.post("/register", authMiddleware, async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role:   role || "Sales-agent",
+      role: role || "Sales-agent",
       branch,
-      phone:  phone || "",
-      bio:    bio   || ""
+      phone: phone || "",
+      bio: bio || ""
     });
 
     await newUser.save();

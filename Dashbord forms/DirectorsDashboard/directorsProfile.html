@@ -4,15 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Director Profile | Karibu</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="/Dashbord forms/DirectorsDashboard/directorsDashboard.css"> <!-- Reusing existing profile CSS for card style -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <!-- Reuse the same profile layout/style stack used by manager profile -->
+    <link rel="stylesheet" href="/Dashbord forms/CSS/sellersDashboard.css">
+    <link rel="stylesheet" href="/Dashbord forms/CSS/profile.css">
     <link rel="stylesheet" href="/Dashbord forms/CSS/layout.css">
-
     <link rel='stylesheet' href='/Dashbord forms/CSS/responsive.css' />
 </head>
 <body>
-    <div class="layout">
-
+<div class="layout">
     <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="logo">
@@ -39,20 +42,8 @@
                 </a>
             </li>
             <li>
-                <a href="/Dashbord forms/DirectorsDashboard/directorsReports.html">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Reports</span>
-                </a>
-            </li>
-            <li>
-                <a href="/Dashbord forms/DirectorsDashboard/directorsAnalytics.html">
-                    <i class="fas fa-chart-pie"></i>
-                    <span>Analytics</span>
-                </a>
-            </li>
-            <li>
                 <a href="/Dashbord forms/DirectorsDashboard/usermanegementDash.html">
-                    <i class="fas fa-users icon blue"></i>
+                    <i class="fas fa-users"></i>
                     <span>User Management</span>
                 </a>
             </li>
@@ -63,7 +54,7 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="#" id="logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </a>
@@ -71,48 +62,55 @@
         </ul>
     </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-        <!-- TOP BAR -->
-        <div class="top-bar">
-            <h2>Director Profile</h2>
-            <div class="user-info">
-                <span>Welcome, Director</span>
-                <img src="/images/logo/karibu icon.png" alt="Director">
-            </div>
+    <!-- MAIN CONTENT (same structure pattern as manager profile) -->
+    <main class="main--content">
+      <div class="header--wrapper">
+        <div class="header--title">
+          <span>Director</span>
+          <h2>Profile</h2>
         </div>
+      </div>
 
-        <!-- PROFILE CARD (Reusing structure from profile.html but with Director info) -->
-        <div class="profile--container">
-            <div class="profile--card" style="border: 2px solid #1B5E20;">
-                <img src="/images/logo/karibu icon.png" alt="Director Photo">
+      <div class="profile--container">
+        <div class="profile--card">
 
-                <h3>Director Name</h3>
-                <p class="role">Operations Director</p>
-
-                <div class="profile--info">
-                    <p><strong>Department:</strong> Executive Management</p>
-                    <p><strong>Email:</strong> director@karibu.com</p>
-                    <p><strong>Phone:</strong> +256 772 123456</p>
-                    <p><strong>Office:</strong> Headquarters, Level 4</p>
-                </div>
-
-                <div class="profile--bio">
-                    <h4>Bio</h4>
-                    <p>
-                        Responsible for overseeing all branch operations, strategic planning, and financial growth of Karibu Grocery Stores.
-                    </p>
-                </div>
-                
-                <div style="margin-top: 20px;">
-                    <button class="btn-download" style="width: 100%;">Edit Profile</button>
-                    <button class="btn-download" style="width: 100%; margin-top: 10px; background: #666;">Change Password</button>
-                </div>
+          <!-- Same card structure/classes as manager profile for visual consistency -->
+          <div class="profile--avatar-wrapper" title="Click to change photo">
+            <img src="/images/logo/karibu icon.png" alt="Director Photo">
+            <div class="avatar--overlay">
+              <i class="fas fa-camera"></i>
             </div>
-        </div>
+          </div>
+          <label for="profile-pic-input" class="profile-pic-input--hidden">
+            <input type="file" id="profile-pic-input" accept="image/*" title="Change profile picture">
+          </label>
 
+          <h3>Director Name</h3>
+          <p class="role">Director</p>
+
+          <div class="profile--info">
+            <p><strong>Branch:</strong> Headquarters</p>
+            <p><strong>Email:</strong> director@karibu.com</p>
+            <p><strong>Phone:</strong> +256 700 000000</p>
+          </div>
+
+          <div class="profile--bio">
+            <h4>Bio</h4>
+            <p>This Director oversees branch operations, strategy, and performance.</p>
+            <button type="button" class="bio--edit-btn" id="bio-edit-btn"><i class="fas fa-pencil-alt"></i> Edit</button>
+
+            <div id="bio-edit-controls" class="bio--edit-controls--hidden">
+              <textarea class="bio--textarea" id="bio-textarea" placeholder="Write something about yourself..."></textarea>
+              <button type="button" class="bio--save-btn" id="bio-save-btn">Save</button>
+              <button type="button" class="bio--cancel-btn" id="bio-cancel-btn">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
-    </div>
+
+    <script src="/Dashbord forms/JS/profile.js"></script>
+    <script src="/Dashbord forms/JS/logout.js"></script>
+</div>
 </body>
 </html>
-

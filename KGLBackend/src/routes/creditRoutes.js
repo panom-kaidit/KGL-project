@@ -1,31 +1,23 @@
 const express = require("express");
-const router  = express.Router();
+const router = express.Router();
 
 const authMiddleware = require("../middlewares/authMiddleware");
 const {
   getCreditSales,
   getAllCreditSales,
+  searchCreditSales,
   getCreditSaleById,
   makePayment
 } = require("../controllers/creditController");
 
-/**
- * Credit-sale routes
- *
- * All routes require a valid JWT (authMiddleware).
- * Role-based scoping is handled inside each controller function.
- *
- * GET  /credits          → active credits (pending / partial) in caller's scope
- * GET  /credits/all      → all credits including paid (audit view)
- * GET  /credits/:id      → single credit sale detail
- * PATCH /credits/:id/pay → record a payment against a credit sale
- */
-
 // List active credit sales
 router.get("/", authMiddleware, getCreditSales);
 
-// List ALL credit sales (including paid) — place before /:id to avoid conflict
+// List ALL credit sales (including paid)
 router.get("/all", authMiddleware, getAllCreditSales);
+
+// Flexible search by customer details / NIN / phone / location / product
+router.get("/search", authMiddleware, searchCreditSales);
 
 // Single credit sale detail
 router.get("/:id", authMiddleware, getCreditSaleById);

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -98,20 +98,38 @@
         <div class="cards">
             <div class="card green">
                 <h3>Total Stock</h3>
-                <h1 id="totalStockPct">—</h1>
-                <p id="inStockLabel">Loading…</p>
+                <h1 id="totalStockPct">--</h1>
+                <p id="inStockLabel">Loading...</p>
             </div>
 
             <div class="card yellow">
                 <h3>Low Stock</h3>
-                <h1 id="lowStockCount">—</h1>
+                <h1 id="lowStockCount">--</h1>
                 <p>Action needed soon</p>
             </div>
 
             <div class="card darkgreen">
                 <h3>Out of Stock</h3>
-                <h1 id="outOfStockCount">—</h1>
+                <h1 id="outOfStockCount">--</h1>
                 <p>Stockup soon!</p>
+            </div>
+
+            <div class="card green">
+                <h3>Branch Total Sales</h3>
+                <h1 id="branchTotalSales">Loading...</h1>
+                <p>Current branch sales value</p>
+            </div>
+
+            <div class="card yellow">
+                <h3>Branch Transactions</h3>
+                <h1 id="branchTransactions">Loading...</h1>
+                <p>Number of sales records</p>
+            </div>
+
+            <div class="card darkgreen">
+                <h3>Branch Credit Sales</h3>
+                <h1 id="branchCreditSales">Loading...</h1>
+                <p>Current branch credit value</p>
             </div>
         </div>
 
@@ -133,7 +151,7 @@
 
                 <tbody id="inventoryTableBody">
                     <tr>
-                        <td colspan="6" style="text-align:center;color:#999;padding:24px;">Loading inventory…</td>
+                        <td colspan="6" style="text-align:center;color:#999;padding:24px;">Loading inventory...</td>
                     </tr>
                 </tbody>
             </table>
@@ -146,4 +164,3 @@
 </div>
 </body>
 </html>
-

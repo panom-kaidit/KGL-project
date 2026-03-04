@@ -40,18 +40,6 @@
                 </a>
             </li>
             <li>
-                <a href="/Dashbord forms/DirectorsDashboard/directorsReports.html">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Reports</span>
-                </a>
-            </li>
-            <li>
-                <a href="/Dashbord forms/DirectorsDashboard/directorsAnalytics.html">
-                    <i class="fas fa-chart-pie"></i>
-                    <span>Analytics</span>
-                </a>
-            </li>
-            <li>
                 <a href="/Dashbord forms/DirectorsDashboard/usermanegementDash.html">
                     <i class="fas fa-users icon blue"></i>
                     <span>User Management</span>
@@ -64,7 +52,7 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="#" id="logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </a>
@@ -84,102 +72,23 @@
             </div>
         </div>
 
-        <!-- BRANCH CARDS -->
-        <div class="cards">
-            <div class="card">
-                <h3>Top Branch</h3>
-                <h1>Kampala Main</h1>
-                <p>Revenue: UGX 12M</p>
-            </div>
-            <div class="card">
-                <h3>Most Transactions</h3>
-                <h1>Jinja Road</h1>
-                <p>320 Sales</p>
-            </div>
-            <div class="card">
-                <h3>Needs Attention</h3>
-                <h1>Entebbe</h1>
-                <p>Revenue down 5%</p>
-            </div>
-        </div>
-
-        <!-- PERFORMANCE CHART -->
         <div class="table-container">
-            <h3>Revenue by Branch (This Month)</h3>
-            <canvas id="branchChart" style="max-height: 400px;"></canvas>
-        </div>
-
-        <!-- BRANCH TABLE -->
-        <div class="table-container">
-            <h3>Detailed Metrics</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Branch Name</th>
-                        <th>Manager</th>
-                        <th>Total Revenue</th>
-                        <th>Expenses</th>
-                        <th>Net Profit</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Kampala Main</td>
-                        <td>John Doe</td>
-                        <td>UGX 12.0M</td>
-                        <td>UGX 2.0M</td>
-                        <td>UGX 10.0M</td>
-                        <td style="color: green;">Excellent</td>
-                    </tr>
-                    <tr>
-                        <td>Jinja Road</td>
-                        <td>Jane Smith</td>
-                        <td>UGX 8.5M</td>
-                        <td>UGX 1.5M</td>
-                        <td>UGX 7.0M</td>
-                        <td style="color: green;">Good</td>
-                    </tr>
-                    <tr>
-                        <td>Mbarara</td>
-                        <td>Alex K.</td>
-                        <td>UGX 5.2M</td>
-                        <td>UGX 1.2M</td>
-                        <td>UGX 4.0M</td>
-                        <td style="color: orange;">Stable</td>
-                    </tr>
-                    <tr>
-                        <td>Entebbe</td>
-                        <td>Sarah L.</td>
-                        <td>UGX 3.0M</td>
-                        <td>UGX 1.0M</td>
-                        <td>UGX 2.0M</td>
-                        <td style="color: red;">Low</td>
-                    </tr>
-                </tbody>
-            </table>
+            <h3>Branch Performance</h3>
+            <div id="branchCards" class="cards">
+                <div class="card darkgreen">
+                    <h3>Loading branch data...</h3>
+                    <h1>Please wait</h1>
+                    <p>Total Sales: --</p>
+                    <p>Total Credit Sales: --</p>
+                    <p>Remaining Stock: -- KG</p>
+                </div>
+            </div>
         </div>
 
     </main>
 
-    <script>
-        const ctx = document.getElementById('branchChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Kampala Main', 'Jinja Road', 'Mbarara', 'Entebbe'],
-                datasets: [{
-                    label: 'Revenue (Millions UGX)',
-                    data: [12.0, 8.5, 5.2, 3.0],
-                    backgroundColor: ['#1B5E20', '#2E7D32', '#43A047', '#66BB6A']
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
-    </script>
+    <script src="/Dashbord forms/JS/branchPerformance.js"></script>
+    <script src="/Dashbord forms/JS/logout.js"></script>
     </div>
 </body>
 </html>
