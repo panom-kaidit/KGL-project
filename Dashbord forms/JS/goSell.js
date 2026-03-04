@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:3000";
+﻿const API_BASE_URL = window.API_URL || "https://kgl-project-3g6j.onrender.com";
 
 let allSales = [];
 let salesSortDirection = "desc";
@@ -359,3 +359,4 @@ function formatCurrency(num) {
     maximumFractionDigits: 0
   });
 }
+

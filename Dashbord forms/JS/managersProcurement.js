@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000';
+﻿const API_BASE_URL = window.API_URL || "https://kgl-project-3g6j.onrender.com";
 
 let allProcurements = [];
 let sortDirection   = 'desc';
@@ -112,7 +112,7 @@ async function loadProcurements() {
 
     // FIXED (BACK-01): Previously the API returned ALL branches and the frontend
     // filtered client-side. Now the backend filters by branch (from JWT), so we
-    // just use the data as returned — no client-side branch filter needed.
+    // just use the data as returned â€” no client-side branch filter needed.
     allProcurements = result.data || [];
 
     applyFilters();
@@ -197,3 +197,4 @@ function showAlert(message, type = 'info') {
   document.body.appendChild(alertContainer);
   setTimeout(() => alertContainer.remove(), 3000);
 }
+

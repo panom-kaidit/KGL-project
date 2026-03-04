@@ -1,5 +1,5 @@
-// Base API URL - Update this to match your backend server URL
-const API_BASE_URL = 'http://localhost:3000'; // Must match the port your backend is running on
+﻿// Base API URL - Update this to match your backend server URL
+const API_BASE_URL = window.API_URL || "https://kgl-project-3g6j.onrender.com"; // Must match the port your backend is running on
 
 // Form elements will be initialized after DOM is ready
 let procurementForm;
@@ -120,7 +120,7 @@ async function handleFormSubmit(e) {
       showAlert('Cost must be numeric and at least 5 digits (>=10000)', 'error');
       return;
     }
-    // Branch is not validated client-side — it is enforced server-side from JWT.
+    // Branch is not validated client-side â€” it is enforced server-side from JWT.
 
     // Calculate selling price if empty
     let sellingPrice = sellingPriceInput.value;
@@ -284,3 +284,4 @@ if (typeof module !== 'undefined' && module.exports) {
     showAlert
   };
 }
+

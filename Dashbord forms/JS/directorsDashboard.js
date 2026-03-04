@@ -1,4 +1,4 @@
-﻿const API_BASE = "http://localhost:3000";
+﻿const API_BASE = window.API_URL || "https://kgl-project-3g6j.onrender.com";
 
 let performanceChart = null;
 
@@ -379,3 +379,4 @@ async function loadDirectorDashboard() {
 }
 
 document.addEventListener("DOMContentLoaded", loadDirectorDashboard);
+

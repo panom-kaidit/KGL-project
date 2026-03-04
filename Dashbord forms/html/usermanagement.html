@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -79,7 +79,7 @@
         <div class="header um-header">
             <div>
                 <h1>User Management</h1>
-                <p id="branch-label">Loading branch users…</p>
+                <p id="branch-label">Loading branch usersâ€¦</p>
             </div>
             <a href="/Dashbord forms/html/addUser.html" class="btn btn-primary">
                 <i class="fas fa-user-plus"></i> Add User
@@ -97,7 +97,7 @@
                     type="text"
                     id="searchInput"
                     class="search-input"
-                    placeholder="Search by name, email or role…"
+                    placeholder="Search by name, email or roleâ€¦"
                     autocomplete="off"
                 >
                 <button type="button" id="clearSearch" class="clear-btn" aria-label="Clear search">
@@ -108,10 +108,10 @@
             <div class="sort-wrapper">
                 <span class="sort-label">Sort:</span>
                 <button type="button" id="sortAZ" class="sort-btn active" data-sort="az">
-                    <i class="fas fa-sort-alpha-down"></i> A–Z
+                    <i class="fas fa-sort-alpha-down"></i> Aâ€“Z
                 </button>
                 <button type="button" id="sortZA" class="sort-btn" data-sort="za">
-                    <i class="fas fa-sort-alpha-up"></i> Z–A
+                    <i class="fas fa-sort-alpha-up"></i> Zâ€“A
                 </button>
             </div>
         </div>
@@ -133,7 +133,7 @@
                 <tbody id="usersTableBody">
                     <tr class="loading-row">
                         <td colspan="6" class="text-center">
-                            <i class="fas fa-spinner fa-spin"></i>&nbsp; Loading users…
+                            <i class="fas fa-spinner fa-spin"></i>&nbsp; Loading usersâ€¦
                         </td>
                     </tr>
                 </tbody>
@@ -152,6 +152,9 @@
     <script src="/Dashbord forms/JS/usermanagement.js"></script>
     <script src="/Dashbord forms/JS/logout.js"></script>
 </div>
+
+    <script src="/Dashbord forms/JS/apiConfig.js"></script>
 </body>
 </html>
+
 

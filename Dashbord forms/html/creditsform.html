@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -12,7 +12,7 @@
 
 <div class="page-wrapper">
 
-  <!-- ── Header ─────────────────────────────────────────────────────────────── -->
+  <!-- â”€â”€ Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
   <div class="form-header">
     <img src="/images/logo/karibu icon.png" alt="Karibu">
     <h1>Karibu</h1>
@@ -20,10 +20,10 @@
     <p>Look up a credit sale and record a customer payment</p>
   </div>
 
-  <!-- ── Global alert banner ────────────────────────────────────────────────── -->
+  <!-- â”€â”€ Global alert banner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
   <div id="alert-box" class="alert hidden" role="alert"></div>
 
-  <!-- ── SECTION 1 · Search ─────────────────────────────────────────────────── -->
+  <!-- â”€â”€ SECTION 1 Â· Search â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
   <div class="card" id="search-card">
     <h3 class="card-title">Find Credit Sale</h3>
     <div class="search-row">
@@ -39,7 +39,7 @@
     <p class="hint">You can find the Sale ID on the original credit receipt or the credit list.</p>
   </div>
 
-  <!-- ── SECTION 2 · Sale Details (hidden until search succeeds) ───────────── -->
+  <!-- â”€â”€ SECTION 2 Â· Sale Details (hidden until search succeeds) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
   <div class="card hidden" id="details-card">
     <div class="card-title-row">
       <h3 class="card-title">Sale Details</h3>
@@ -50,19 +50,19 @@
     <div class="detail-grid">
       <div class="detail-item">
         <span class="detail-label">Customer</span>
-        <span class="detail-value" id="d-customer">—</span>
+        <span class="detail-value" id="d-customer">â€”</span>
       </div>
       <div class="detail-item">
         <span class="detail-label">National ID</span>
-        <span class="detail-value" id="d-nin">—</span>
+        <span class="detail-value" id="d-nin">â€”</span>
       </div>
       <div class="detail-item">
         <span class="detail-label">Phone</span>
-        <span class="detail-value" id="d-phone">—</span>
+        <span class="detail-value" id="d-phone">â€”</span>
       </div>
       <div class="detail-item">
         <span class="detail-label">Location</span>
-        <span class="detail-value" id="d-location">—</span>
+        <span class="detail-value" id="d-location">â€”</span>
       </div>
     </div>
 
@@ -72,19 +72,19 @@
     <div class="detail-grid">
       <div class="detail-item">
         <span class="detail-label">Product</span>
-        <span class="detail-value" id="d-product">—</span>
+        <span class="detail-value" id="d-product">â€”</span>
       </div>
       <div class="detail-item">
         <span class="detail-label">Tonnage</span>
-        <span class="detail-value" id="d-tonnage">—</span>
+        <span class="detail-value" id="d-tonnage">â€”</span>
       </div>
       <div class="detail-item">
         <span class="detail-label">Sale Date</span>
-        <span class="detail-value" id="d-date">—</span>
+        <span class="detail-value" id="d-date">â€”</span>
       </div>
       <div class="detail-item">
         <span class="detail-label">Due Date</span>
-        <span class="detail-value" id="d-duedate">—</span>
+        <span class="detail-value" id="d-duedate">â€”</span>
       </div>
     </div>
 
@@ -94,15 +94,15 @@
     <div class="balance-row">
       <div class="balance-item balance-total">
         <span class="balance-label">Original Amount</span>
-        <span class="balance-value" id="d-original">—</span>
+        <span class="balance-value" id="d-original">â€”</span>
       </div>
       <div class="balance-item balance-paid">
         <span class="balance-label">Total Paid</span>
-        <span class="balance-value" id="d-totalpaid">—</span>
+        <span class="balance-value" id="d-totalpaid">â€”</span>
       </div>
       <div class="balance-item balance-due">
         <span class="balance-label">Balance Due</span>
-        <span class="balance-value" id="d-amountdue">—</span>
+        <span class="balance-value" id="d-amountdue">â€”</span>
       </div>
     </div>
 
@@ -133,7 +133,7 @@
     </details>
   </div>
 
-  <!-- ── SECTION 3 · Payment Form (hidden when sale is paid) ──────────────── -->
+  <!-- â”€â”€ SECTION 3 Â· Payment Form (hidden when sale is paid) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
   <div class="card hidden" id="payment-card">
     <h3 class="card-title">Record Payment</h3>
     <form id="payment-form" onsubmit="submitPayment(event)">
@@ -175,7 +175,7 @@
     </form>
   </div>
 
-  <!-- ── SECTION 4 · Fully paid confirmation ──────────────────────────────── -->
+  <!-- â”€â”€ SECTION 4 Â· Fully paid confirmation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
   <div class="card hidden" id="paid-card">
     <div class="paid-banner">
       <div class="paid-icon">&#10003;</div>
@@ -188,6 +188,9 @@
 </div><!-- /page-wrapper -->
 
 <script src="/Dashbord forms/JS/creditsform.js"></script>
+
+    <script src="/Dashbord forms/JS/apiConfig.js"></script>
 </body>
 </html>
+
 

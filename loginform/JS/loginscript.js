@@ -3,6 +3,7 @@
 const form = document.getElementById("form-box");
 const userMail = document.getElementById("email");
 const passCode = document.getElementById("passcode");
+const API_URL = window.API_URL || "https://kgl-project-3g6j.onrender.com";
 
 
 // Function to decode JWT token
@@ -23,7 +24,7 @@ form.addEventListener("submit", async function (event) {
     const password = passCode.value.trim();
 
     try {
-        const response = await fetch("http://localhost:3000/users/login", {
+        const response = await fetch(`${API_URL}/users/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

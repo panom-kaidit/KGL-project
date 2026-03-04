@@ -1,4 +1,4 @@
-﻿const API_BASE_URL = 'http://localhost:3000';
+﻿const API_BASE_URL = window.API_URL || "https://kgl-project-3g6j.onrender.com";
 
 // ADDED: XSS guard - server-sourced strings escaped before innerHTML injection
 function escHtml(str) {
@@ -185,3 +185,4 @@ function formatCurrency(num) {
     maximumFractionDigits: 0
   });
 }
+

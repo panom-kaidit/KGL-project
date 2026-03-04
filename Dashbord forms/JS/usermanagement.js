@@ -1,5 +1,5 @@
-/**
- * usermanagement.js — Branch User List
+﻿/**
+ * usermanagement.js â€” Branch User List
  *
  * Fetches all users belonging to the logged-in manager's branch
  * via GET /users/branch, renders them into a searchable, sortable table.
@@ -10,14 +10,14 @@
 
 'use strict';
 
-const API_BASE = 'http://localhost:3000';
+const API_BASE = window.API_URL || "https://kgl-project-3g6j.onrender.com";
 
-// ── State ─────────────────────────────────────────────────────────────────────
+// â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 let allUsers    = [];   // full list from API
 let currentSort = 'az'; // 'az' | 'za'
 
-// ── Auth helpers ──────────────────────────────────────────────────────────────
+// â”€â”€ Auth helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function getToken() {
   return localStorage.getItem('token');
@@ -31,7 +31,7 @@ function decodeToken(token) {
   }
 }
 
-// ── Alert ─────────────────────────────────────────────────────────────────────
+// â”€â”€ Alert â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function showAlert(message, type) {
   const box = document.getElementById('alert-box');
@@ -39,13 +39,13 @@ function showAlert(message, type) {
   box.textContent = message;
 }
 
-// ── Avatar helper — first letter of name ─────────────────────────────────────
+// â”€â”€ Avatar helper â€” first letter of name â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function avatarLetter(name) {
   return (name || '?').charAt(0).toUpperCase();
 }
 
-// ── Role badge CSS class ──────────────────────────────────────────────────────
+// â”€â”€ Role badge CSS class â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function roleBadgeClass(role) {
   var map = {
@@ -56,7 +56,7 @@ function roleBadgeClass(role) {
   return map[role] || 'role-default';
 }
 
-// ── Basic XSS guard ───────────────────────────────────────────────────────────
+// â”€â”€ Basic XSS guard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function escHtml(str) {
   return String(str)
@@ -66,7 +66,7 @@ function escHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
-// ── Render table rows ─────────────────────────────────────────────────────────
+// â”€â”€ Render table rows â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function renderTable(users) {
   var tbody     = document.getElementById('usersTableBody');
@@ -89,22 +89,22 @@ function renderTable(users) {
       '<td>' +
         '<div class="user-name-cell">' +
           '<div class="avatar">' + avatarLetter(u.name) + '</div>' +
-          '<span>' + escHtml(u.name || '—') + '</span>' +
+          '<span>' + escHtml(u.name || 'â€”') + '</span>' +
         '</div>' +
       '</td>' +
-      '<td>' + escHtml(u.email || '—') + '</td>' +
+      '<td>' + escHtml(u.email || 'â€”') + '</td>' +
       '<td>' +
         '<span class="role-badge ' + roleBadgeClass(u.role) + '">' +
-          escHtml(u.role || '—') +
+          escHtml(u.role || 'â€”') +
         '</span>' +
       '</td>' +
-      '<td><span class="branch-badge">' + escHtml(u.branch || '—') + '</span></td>' +
-      '<td>' + escHtml(u.phone || '—') + '</td>' +
+      '<td><span class="branch-badge">' + escHtml(u.branch || 'â€”') + '</span></td>' +
+      '<td>' + escHtml(u.phone || 'â€”') + '</td>' +
     '</tr>';
   }).join('');
 }
 
-// ── Apply current search + sort and re-render ─────────────────────────────────
+// â”€â”€ Apply current search + sort and re-render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function applyFilters() {
   var query = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -127,7 +127,7 @@ function applyFilters() {
   renderTable(filtered);
 }
 
-// ── Fetch branch users from the API ──────────────────────────────────────────
+// â”€â”€ Fetch branch users from the API â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 async function loadBranchUsers() {
   var token = getToken();
@@ -158,7 +158,7 @@ async function loadBranchUsers() {
     allUsers = body.data || [];
 
     document.getElementById('branch-label').textContent =
-      'Branch: ' + body.branch + ' — ' + body.count +
+      'Branch: ' + body.branch + ' â€” ' + body.count +
       ' user' + (body.count !== 1 ? 's' : '');
 
     applyFilters();
@@ -170,7 +170,7 @@ async function loadBranchUsers() {
   }
 }
 
-// ── Boot ──────────────────────────────────────────────────────────────────────
+// â”€â”€ Boot â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 document.addEventListener('DOMContentLoaded', function() {
   loadBranchUsers();

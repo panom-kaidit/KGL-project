@@ -1,4 +1,4 @@
-/**
+﻿/**
  * creditsform.js - Credit Payment Processing
  *
  * Flow:
@@ -10,7 +10,7 @@
 
 "use strict";
 
-const API_BASE = "http://localhost:3000";
+const API_BASE = window.API_URL || "https://kgl-project-3g6j.onrender.com";
 
 function getToken() {
   return localStorage.getItem("token");
@@ -319,3 +319,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+

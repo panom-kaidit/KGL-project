@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:3000';
+﻿const API_BASE = window.API_URL || "https://kgl-project-3g6j.onrender.com";
 
 function getToken()  { return localStorage.getItem('token'); }
 
@@ -7,7 +7,7 @@ function decodeToken(token) {
   catch { return null; }
 }
 
-// ADDED: XSS guard — used instead of raw innerHTML with server data
+// ADDED: XSS guard â€” used instead of raw innerHTML with server data
 function escHtml(str) {
   return String(str ?? '')
     .replace(/&/g, '&amp;')
@@ -78,7 +78,7 @@ function displayUserProfile(user) {
   // FIXED (SECURITY-07 / XSS): Was using innerHTML with raw server data:
   //   profileInfo.innerHTML = `<p><strong>Branch:</strong> ${user.branch}</p>...`
   // If branch/email/phone contained <script> or <img onerror=...> it would execute.
-  // Now builds DOM nodes with textContent — no HTML parsing of user data.
+  // Now builds DOM nodes with textContent â€” no HTML parsing of user data.
   const profileInfo = document.querySelector('.profile--info');
   if (profileInfo) {
     profileInfo.innerHTML = '';
@@ -209,3 +209,4 @@ function showSaveMessage(msg) {
   msgEl.textContent = msg;
   setTimeout(() => { msgEl.textContent = ''; }, 3000);
 }
+

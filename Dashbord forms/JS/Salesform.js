@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:3000";
+﻿const API_BASE = window.API_URL || "https://kgl-project-3g6j.onrender.com";
 
 let products = [];
 let creditProducts = [];
@@ -486,3 +486,4 @@ function escapeHtml(value) {
 function escapeAttr(value) {
   return escapeHtml(value).replace(/'/g, "&#39;");
 }
+

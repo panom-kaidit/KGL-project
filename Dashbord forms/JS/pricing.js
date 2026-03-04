@@ -1,8 +1,8 @@
-"use strict";
+﻿"use strict";
 
-const API_BASE = "http://localhost:3000";
+const API_BASE = window.API_URL || "https://kgl-project-3g6j.onrender.com";
 
-// ── Auth helpers ─────────────────────────────────────────────────────────────
+// â”€â”€ Auth helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function getToken() {
   return localStorage.getItem("token");
 }
@@ -15,7 +15,7 @@ function decodeToken(token) {
   }
 }
 
-// ── XSS guard ────────────────────────────────────────────────────────────────
+// â”€â”€ XSS guard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function esc(str) {
   return String(str ?? "")
     .replace(/&/g, "&amp;")
@@ -24,12 +24,12 @@ function esc(str) {
     .replace(/"/g, "&quot;");
 }
 
-// ── Number formatting ────────────────────────────────────────────────────────
+// â”€â”€ Number formatting â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function fmt(n) {
   return Number(n).toLocaleString("en-UG");
 }
 
-// ── Alert banner ─────────────────────────────────────────────────────────────
+// â”€â”€ Alert banner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function showAlert(message, type = "error") {
   const banner = document.getElementById("alertBanner");
   banner.textContent = message;
@@ -42,7 +42,7 @@ function showAlert(message, type = "error") {
   }, 5000);
 }
 
-// ── Summary cards ─────────────────────────────────────────────────────────────
+// â”€â”€ Summary cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function updateSummaryCards(products) {
   const total   = products.length;
   const priced  = products.filter((p) => p.hasPricing).length;
@@ -53,7 +53,7 @@ function updateSummaryCards(products) {
   document.getElementById("pricesMissing").textContent  = missing;
 }
 
-// ── Build one product card ────────────────────────────────────────────────────
+// â”€â”€ Build one product card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function buildCard(product) {
   const {
     productName,
@@ -104,7 +104,7 @@ function buildCard(product) {
 
       <div class="price-row" id="margin-row-${encodedName}">
         <span class="price-label">Profit Margin</span>
-        ${marginLabel || '<span class="price-value unset">—</span>'}
+        ${marginLabel || '<span class="price-value unset">â€”</span>'}
       </div>
 
       <p class="audit-trail" id="audit-${encodedName}">${auditText}</p>
@@ -120,7 +120,7 @@ function buildCard(product) {
       <!-- EDIT PANEL -->
       <div class="edit-panel" id="edit-panel-${encodedName}">
         <label for="price-input-${encodedName}">
-          New Selling Price (UGX) — must be ≥ UGX ${fmt(buyingPrice)}
+          New Selling Price (UGX) â€” must be â‰¥ UGX ${fmt(buyingPrice)}
         </label>
         <input
           type="number"
@@ -147,7 +147,7 @@ function buildCard(product) {
   `;
 }
 
-// ── Toggle inline edit panel ─────────────────────────────────────────────────
+// â”€â”€ Toggle inline edit panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function toggleEdit(encodedName, buyingPrice) {
   const panel   = document.getElementById(`edit-panel-${encodedName}`);
   const editBtn = document.getElementById(`edit-btn-${encodedName}`);
@@ -175,13 +175,13 @@ function cancelEdit(encodedName) {
   editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i> Edit Price';
 }
 
-// ── Save price (PUT request) ──────────────────────────────────────────────────
+// â”€â”€ Save price (PUT request) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function savePrice(encodedName, productName, buyingPrice) {
   const input   = document.getElementById(`price-input-${encodedName}`);
   const saveBtn = document.getElementById(`save-btn-${encodedName}`);
   const newPrice = Number(input.value);
 
-  // ── Client-side validation ────────────────────────────────────────────────
+  // â”€â”€ Client-side validation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (!input.value.trim() || isNaN(newPrice)) {
     showAlert("Please enter a valid selling price.", "error");
     input.focus();
@@ -203,9 +203,9 @@ async function savePrice(encodedName, productName, buyingPrice) {
     return;
   }
 
-  // ── Loading state ─────────────────────────────────────────────────────────
+  // â”€â”€ Loading state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   saveBtn.disabled = true;
-  saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving…';
+  saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Savingâ€¦';
 
   try {
     const res = await fetch(
@@ -232,7 +232,7 @@ async function savePrice(encodedName, productName, buyingPrice) {
       return;
     }
 
-    // ── Update UI in-place without full page reload ───────────────────────
+    // â”€â”€ Update UI in-place without full page reload â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     updateCardInPlace(encodedName, productName, buyingPrice, data.product);
     showAlert(
       `Price for "${productName}" updated to UGX ${fmt(newPrice)} successfully.`,
@@ -247,7 +247,7 @@ async function savePrice(encodedName, productName, buyingPrice) {
   }
 }
 
-// ── Patch the card's price display after a successful save ───────────────────
+// â”€â”€ Patch the card's price display after a successful save â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function updateCardInPlace(encodedName, productName, buyingPrice, updatedProduct) {
   const { sellingPrice, updatedBy, updatedAt } = updatedProduct;
   const margin = sellingPrice - buyingPrice;
@@ -274,7 +274,7 @@ function updateCardInPlace(encodedName, productName, buyingPrice, updatedProduct
   if (input) input.value = sellingPrice;
 }
 
-// ── Render entire grid ────────────────────────────────────────────────────────
+// â”€â”€ Render entire grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function renderGrid(products) {
   const grid = document.getElementById("productGrid");
 
@@ -290,7 +290,7 @@ function renderGrid(products) {
   grid.innerHTML = products.map(buildCard).join("");
 }
 
-// ── Load pricing data from API ────────────────────────────────────────────────
+// â”€â”€ Load pricing data from API â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function loadPricing() {
   try {
     const res = await fetch(`${API_BASE}/api/pricing`, {
@@ -323,7 +323,7 @@ async function loadPricing() {
   }
 }
 
-// ── Boot ──────────────────────────────────────────────────────────────────────
+// â”€â”€ Boot â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 document.addEventListener("DOMContentLoaded", () => {
   const token = getToken();
   if (!token) {
@@ -339,3 +339,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadPricing();
 });
+
