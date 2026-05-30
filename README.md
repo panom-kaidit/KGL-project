@@ -128,7 +128,7 @@ Directors manage Managers; Managers manage their own Sales-agents. The user mana
 
 ### Project Architecture
 
-> Insert project architecture diagram here
+> Project architecture diagram will here
 
 &nbsp;
 
@@ -175,7 +175,7 @@ The frontend stores the JWT in `localStorage` and attaches it to every request a
 
 ### Entity Relationship Diagram (ERD)
 
-> Insert ERD diagram here
+> ERD diagram will be here
 
 &nbsp;
 
